@@ -1,5 +1,6 @@
 mod client;
 mod config;
+pub mod dota2;
 mod error;
 mod response;
 
