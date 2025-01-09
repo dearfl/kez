@@ -2,7 +2,10 @@ use reqwest::{IntoUrl, StatusCode};
 use serde::Deserialize;
 
 use crate::{
-    dota2::get_match_history_by_seq_num::{MatchHistoryBySeqNum, MatchHistoryBySeqNumParameter},
+    dota2::{
+        get_match_history::{MatchHistory, MatchHistoryParameter},
+        get_match_history_by_seq_num::{MatchHistoryBySeqNum, MatchHistoryBySeqNumParameter},
+    },
     Config, Error, Response, Result, TransformRequest,
 };
 
@@ -81,6 +84,30 @@ impl Client {
     {
         const URL: &str =
             "https://api.steampowered.com/IDOTA2Match_570/GetMatchHistoryBySequenceNum/v1";
+        self.get(URL, para.into()).await
+    }
+
+    /// Request some match history by applying some filters.
+    /// # Example:
+    /// ```rust,no_run
+    /// use kez::Client;
+    /// use kez::dota2::get_match_history::MatchHistoryParameter;
+    ///
+    /// #[tokio::main]
+    /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    ///   let client: Client = Client::new("MY_STEAM_API_KEY").expect("Failed to create client");
+    ///   // request 100 matches contains hero Kez starting from match id 0
+    ///   let filter = MatchHistoryParameter::new().with_hero_id(145).with_matches_requested(100);
+    ///   let result = client.get_match_history(filter).await?;
+    ///   println!("{:?}", result);
+    ///   Ok(())
+    /// }
+    /// ```
+    pub async fn get_match_history<P>(&self, para: P) -> Result<MatchHistory>
+    where
+        P: Into<MatchHistoryParameter>,
+    {
+        const URL: &str = "https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1";
         self.get(URL, para.into()).await
     }
 }
