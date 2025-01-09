@@ -40,8 +40,11 @@ jobs:
     - name: Clippy Check
       run: cargo clippy -- -D warnings
 
-    - name: Build
+    - name: Build Library
       run: cargo build --verbose
+
+    - name: Build Examples
+      run: cargo build --examples --verbose
 
     - name: Test
       run: cargo test --verbose
