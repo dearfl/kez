@@ -4,9 +4,8 @@ use thiserror::Error;
 pub enum Error {
     #[error("Reqwest Error: {0}")]
     ReqwestError(#[from] reqwest::Error),
-    #[error("Too Many Requests")]
-    TooManyRequests,
     #[error("Other Response: {0}")]
     OtherResponse(reqwest::StatusCode),
-    // TODO: DecodeError
+    #[error("DecodeError: {0}, content: {1}")]
+    DecodeError(serde_json::Error, String),
 }

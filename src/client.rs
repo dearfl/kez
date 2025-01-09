@@ -1,4 +1,7 @@
-use crate::{Config, Result};
+use reqwest::{IntoUrl, StatusCode};
+use serde::Deserialize;
+
+use crate::{Config, Error, Response, Result, TransformRequest};
 
 /// Client is what used to request an API.
 #[derive(Debug, Clone)]
@@ -30,5 +33,27 @@ impl Client {
     pub fn with_client<C: Into<Config>>(client: reqwest::Client, config: C) -> Self {
         let config = config.into();
         Self { config, client }
+    }
+
+    /// This function is a general function for varies Valve HTTP API.
+    pub(crate) async fn get<T>(&self, url: impl IntoUrl, para: impl TransformRequest) -> Result<T>
+    where
+        T: for<'a> Deserialize<'a>,
+    {
+        let req = self.client.get(url);
+        let req = self.config.transform_request(req);
+        let req = para.transform_request(req);
+
+        let resp = req.send().await?;
+        let status = resp.status();
+
+        if !matches!(status, StatusCode::OK) {
+            return Err(Error::OtherResponse(resp.status()));
+        }
+
+        let content = resp.text().await?;
+        serde_json::from_str(&content)
+            .map(|result: Response<T>| result.result)
+            .map_err(|err| Error::DecodeError(err, content))
     }
 }
