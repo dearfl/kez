@@ -28,6 +28,6 @@ where
 
 impl TransformRequest for Config {
     fn transform_request(&self, req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
-        req.query(&["key", &self.key])
+        req.query(&[("key", &self.key)])
     }
 }
