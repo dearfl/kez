@@ -10,7 +10,7 @@
 /// ```
 #[derive(Debug, Clone)]
 pub struct Config {
-    key: String,
+    pub(crate) key: String,
     // TODO:  add optional parameter: format & language
 }
 
