@@ -1,7 +1,10 @@
 use reqwest::{IntoUrl, StatusCode};
 use serde::Deserialize;
 
-use crate::{Config, Error, Response, Result, TransformRequest};
+use crate::{
+    dota2::get_match_history_by_seq_num::{MatchHistoryBySeqNum, MatchHistoryBySeqNumParameter},
+    Config, Error, Response, Result, TransformRequest,
+};
 
 /// Client is what used to request an API.
 #[derive(Debug, Clone)]
@@ -13,7 +16,7 @@ pub struct Client {
 impl Client {
     /// Create a new client from config.
     /// # Example:
-    /// ```
+    /// ```rust,no_run
     /// use kez::Client;
     /// let client: Client = Client::new("MY_STEAM_API_KEY").expect("Failed to construct client");
     /// ```
@@ -25,7 +28,7 @@ impl Client {
 
     /// Create a new client from existing client and config in case you want to reuse client.
     /// # Example:
-    /// ```
+    /// ```rust,no_run
     /// use kez::Client;
     /// let client = reqwest::Client::new();
     /// let client: Client = Client::with_client(client, "MY_STEAM_API_KEY");
@@ -55,5 +58,29 @@ impl Client {
         serde_json::from_str(&content)
             .map(|result: Response<T>| result.result)
             .map_err(|err| Error::DecodeError(err, content))
+    }
+
+    /// Request a sequence of matches by a start match sequence number and count.
+    /// # Example:
+    /// ```rust,no_run
+    /// use kez::Client;
+    ///
+    /// #[tokio::main]
+    /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    ///     
+    ///   let client: Client = Client::new("MY_STEAM_API_KEY").expect("Failed to create client");
+    ///   // request 100 matches starting from match sequence number 0
+    ///   let result = client.get_match_history_by_seq_num((0, 100)).await?;
+    ///   println!("{:?}", result);
+    ///   Ok(())
+    /// }
+    /// ```
+    pub async fn get_match_history_by_seq_num<P>(&self, para: P) -> Result<MatchHistoryBySeqNum>
+    where
+        P: Into<MatchHistoryBySeqNumParameter>,
+    {
+        const URL: &str =
+            "https://api.steampowered.com/IDOTA2Match_570/GetMatchHistoryBySequenceNum/v1";
+        self.get(URL, para.into()).await
     }
 }
