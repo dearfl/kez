@@ -5,6 +5,18 @@ use crate::TransformRequest;
 /// These are parameters to API get_match_history_by_seq_num
 /// The first parameter specifies which match the result should start with
 /// The second parameter specifies how many matches the result should contains.
+/// # Examples
+/// ```rust,no_run
+/// use kez::dota2::get_match_history_by_seq_num::MatchHistoryBySeqNumParameter;
+/// // 10 matches starting from match sequence number 10000
+/// let para: MatchHistoryBySeqNumParameter = (10000, 10).into();
+/// // 20 matches starting from match sequence number 20000
+/// let para = MatchHistoryBySeqNumParameter::new(20000, 20);
+/// // 100 matches starting from match sequence number 0
+/// let para = MatchHistoryBySeqNumParameter::default();
+/// // 100 matches starting from match sequence number 30000
+/// let para = MatchHistoryBySeqNumParameter::start_at(30000);
+/// ```
 #[derive(Copy, Clone, Debug, Default)]
 pub struct MatchHistoryBySeqNumParameter {
     pub start_at_match_seq_num: Option<u64>,
