@@ -1,10 +1,12 @@
 mod client;
 mod config;
 mod error;
+mod response;
 
 pub use client::Client;
 pub use config::Config;
 pub use error::Error;
+use response::Response;
 
 use reqwest::RequestBuilder;
 
