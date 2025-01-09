@@ -1,3 +1,5 @@
+use crate::TransformRequest;
+
 /// Config is the common parameters for steam api requests.
 /// Most of steam http api have 3 common parameters:
 ///   - key: String, the API KEY used for requesting these APIs.
@@ -21,5 +23,11 @@ where
     fn from(value: S) -> Self {
         let key = value.into();
         Self { key }
+    }
+}
+
+impl TransformRequest for Config {
+    fn transform_request(&self, req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
+        req.query(&["key", &self.key])
     }
 }
