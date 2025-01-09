@@ -1,4 +1,4 @@
-use crate::Config;
+use crate::{Config, Result};
 
 /// Client is what used to request an API.
 #[derive(Debug, Clone)]
@@ -12,12 +12,12 @@ impl Client {
     /// # Example:
     /// ```
     /// use kez::Client;
-    /// let client = Client::new("MY_STEAM_API_KEY");
+    /// let client: Client = Client::new("MY_STEAM_API_KEY").expect("Failed to construct client");
     /// ```
-    pub fn new<C: Into<Config>>(config: C) -> Self {
+    pub fn new<C: Into<Config>>(config: C) -> Result<Self> {
         let config = config.into();
-        let client = reqwest::Client::new();
-        Self { config, client }
+        let client = reqwest::ClientBuilder::new().build()?;
+        Ok(Self { config, client })
     }
 
     /// Create a new client from existing client and config in case you want to reuse client.
@@ -25,7 +25,7 @@ impl Client {
     /// ```
     /// use kez::Client;
     /// let client = reqwest::Client::new();
-    /// let client = Client::with_client(client, "MY_STEAM_API_KEY");
+    /// let client: Client = Client::with_client(client, "MY_STEAM_API_KEY");
     /// ```
     pub fn with_client<C: Into<Config>>(client: reqwest::Client, config: C) -> Self {
         let config = config.into();
