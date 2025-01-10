@@ -1,6 +1,6 @@
 use reqwest::RequestBuilder;
 
-use crate::{Language, Transform};
+use crate::{Format, Language, Transform};
 
 /// A simple wrapper type for API KEY.
 #[derive(Debug, Clone)]
@@ -35,7 +35,28 @@ impl Transform<&Key> for RequestBuilder {
 pub struct Config {
     pub(crate) key: Key,
     pub(crate) language: Option<Language>,
-    // TODO:  add optional parameter: format & language
+    pub(crate) format: Option<Format>,
+}
+
+impl Config {
+    pub fn new(key: impl Into<String>) -> Self {
+        let key = key.into().into();
+        Self {
+            key,
+            language: None,
+            format: None,
+        }
+    }
+
+    pub fn with_language(mut self, language: Language) -> Self {
+        self.language = Some(language);
+        self
+    }
+
+    pub fn with_format(mut self, format: Format) -> Self {
+        self.format = Some(format);
+        self
+    }
 }
 
 impl<S> From<S> for Config
@@ -45,12 +66,19 @@ where
     fn from(value: S) -> Self {
         let key = value.into();
         let language = None;
-        Self { key, language }
+        let format = None;
+        Self {
+            key,
+            language,
+            format,
+        }
     }
 }
 
 impl Transform<&Config> for RequestBuilder {
     fn transform(self, value: &Config) -> Self {
-        self.transform(&value.key).transform(value.language)
+        self.transform(&value.key)
+            .transform(value.language)
+            .transform(value.format)
     }
 }
