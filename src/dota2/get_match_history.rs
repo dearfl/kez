@@ -115,7 +115,10 @@ pub struct Player {
     #[serde(default)]
     pub account_id: u32,
     pub player_slot: u8,
+    pub team_number: u8,
+    pub team_slot: u8,
     pub hero_id: u8,
+    pub hero_variant: u8,
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug, Default)]
@@ -125,6 +128,10 @@ pub struct Match {
     pub start_time: u64,
     pub match_id: u64,
     pub match_seq_num: u64,
+    #[serde(default)]
+    pub radiant_team_id: u64,
+    #[serde(default)]
+    pub dire_team_id: u64,
     pub lobby_type: u8,
 }
 
