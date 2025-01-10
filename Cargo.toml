@@ -13,3 +13,6 @@ thiserror = "2.0.10"
 anyhow = "1.0.95"
 clap = { version = "4.5.25", features = ["derive"] }
 tokio = { version = "1.43.0", features = ["full"] }
+
+[features]
+deny-unknown-fields = []

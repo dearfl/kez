@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 /// Basically anything we care about returned from valve's api is
 /// wrapped inside this struct.
 #[derive(Debug, Clone, Deserialize, Serialize)]
+#[cfg_attr(feature = "deny-unknown-fields", serde(deny_unknown_fields))]
 pub struct Response<T> {
     pub result: T,
 }
