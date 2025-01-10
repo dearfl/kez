@@ -42,5 +42,5 @@ jobs:
     - name: Output
       if: fromJSON(steps.publish-crates.outputs.published).*
       run: |
-        LIST="${{ join(fromJSON(steps.publish-crates.outputs.published).*.name, ', ')) }}"
+        LIST="${{ join(fromJSON(steps.publish-crates.outputs.published).*.name, ', ') }}"
         echo "Published crates: $LIST"
