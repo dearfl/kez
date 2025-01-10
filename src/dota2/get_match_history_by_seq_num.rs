@@ -61,6 +61,7 @@ impl TransformRequest for MatchHistoryBySeqNumParameter {
 }
 
 #[derive(Deserialize, Serialize, Copy, Clone, Debug, Default)]
+#[cfg_attr(feature = "deny-unknown-fields", serde(deny_unknown_fields))]
 pub struct AbilityUpgrade {
     pub ability: u16,
     pub time: u16,
@@ -68,6 +69,7 @@ pub struct AbilityUpgrade {
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug, Default)]
+#[cfg_attr(feature = "deny-unknown-fields", serde(deny_unknown_fields))]
 pub struct Unit {
     pub unitname: String,
     pub item_0: u16,
@@ -83,6 +85,7 @@ pub struct Unit {
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug, Default)]
+#[cfg_attr(feature = "deny-unknown-fields", serde(deny_unknown_fields))]
 pub struct Player {
     #[serde(default)]
     pub account_id: u32,
@@ -141,6 +144,7 @@ pub struct Player {
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug, Default)]
+#[cfg_attr(feature = "deny-unknown-fields", serde(deny_unknown_fields))]
 pub struct HeroSelection {
     pub is_pick: bool,
     pub hero_id: u8,
@@ -149,6 +153,7 @@ pub struct HeroSelection {
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug, Default)]
+#[cfg_attr(feature = "deny-unknown-fields", serde(deny_unknown_fields))]
 pub struct Match {
     pub players: Vec<Player>,
     pub radiant_win: bool,
@@ -200,6 +205,7 @@ pub struct Match {
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug, Default)]
+#[cfg_attr(feature = "deny-unknown-fields", serde(deny_unknown_fields))]
 pub struct MatchHistoryBySeqNum {
     pub status: u8,
     #[serde(rename = "statusDetail", default)]

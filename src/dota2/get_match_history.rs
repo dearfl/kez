@@ -110,6 +110,7 @@ impl MatchHistoryParameter {
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug, Default)]
+#[cfg_attr(feature = "deny-unknown-fields", serde(deny_unknown_fields))]
 pub struct Player {
     #[serde(default)]
     pub account_id: u32,
@@ -118,6 +119,7 @@ pub struct Player {
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug, Default)]
+#[cfg_attr(feature = "deny-unknown-fields", serde(deny_unknown_fields))]
 pub struct Match {
     pub players: Vec<Player>,
     pub start_time: u64,
@@ -127,6 +129,7 @@ pub struct Match {
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug, Default)]
+#[cfg_attr(feature = "deny-unknown-fields", serde(deny_unknown_fields))]
 pub struct MatchHistory {
     pub status: u8,
     #[serde(rename = "statusDetail", default)]
