@@ -50,14 +50,14 @@ impl Client {
         let req = self.config.transform_request(req);
         let req = para.transform_request(req);
 
-        let resp = req.send().await?;
+        let resp = req.send().await.map_err(reqwest::Error::without_url)?;
         let status = resp.status();
 
         if !matches!(status, StatusCode::OK) {
             return Err(Error::OtherResponse(resp.status()));
         }
 
-        let content = resp.text().await?;
+        let content = resp.text().await.map_err(reqwest::Error::without_url)?;
         serde_json::from_str(&content)
             .map(|result: Response<T>| result.result)
             .map_err(|err| Error::DecodeError(err, content))
