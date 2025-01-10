@@ -18,6 +18,14 @@ pub struct Args {
 async fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     let client = Client::new(args.key)?;
+
+    // test get_heroes
+    let result = client.get_heroes(()).await;
+    if let Err(Error::DecodeError(err, content)) = result {
+        anyhow::bail!("DecodeError: {err}\nContent: {content}");
+    };
+
+    // test get_match_history
     let result = client
         .get_match_history(MatchHistoryParameter::default())
         .await;
@@ -34,6 +42,8 @@ async fn main() -> anyhow::Result<()> {
         }
         Err(_) => MatchHistoryBySeqNumParameter::default(),
     };
+
+    // test get_match_history_by_seq_num
     let result = client.get_match_history_by_seq_num(para).await;
     if let Err(Error::DecodeError(err, content)) = result {
         anyhow::bail!("DecodeError: {err}\nContent: {content}");
