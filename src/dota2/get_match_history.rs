@@ -52,7 +52,7 @@ impl TransformRequest for MatchHistoryParameter {
             req = req.query(&[("matches_requested", matches_requested)]);
         }
         if let Some(tournament_games_only) = self.tournament_games_only {
-            req = req.query(&[("tournament_games_only", tournament_games_only)]);
+            req = req.query(&[("tournament_games_only", u8::from(tournament_games_only))]);
         }
         req
     }
