@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use clap::Parser;
-use kez::Client;
+use kez::{dota2::r#match::MatchSeqNum, Client};
 
 // By default this example tries to collect history matches with match_seq_num between 0-1000
 // with a request interval of 10s
@@ -28,7 +28,9 @@ async fn main() -> anyhow::Result<()> {
     let end = args.end;
     while start < end {
         println!("collecting matches starting from {}", start);
-        let result = client.get_match_history_by_seq_num((start, 100)).await?;
+        let result = client
+            .get_match_history_by_seq_num(MatchSeqNum::from(start))
+            .await?;
 
         // update start match_seq_num
         start = result.matches.iter().fold(start + 1, |init, mat| {

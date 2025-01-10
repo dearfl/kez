@@ -1,6 +1,66 @@
+use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
-use crate::{dota2::Skill, TransformRequest};
+use crate::{
+    dota2::{Account, Hero, League, MatchId, MatchesRequested, Mode, Skill, StartAt},
+    Transform,
+};
+
+/// filter for matches with at least N human players.
+#[derive(Copy, Clone, Debug, Default)]
+pub struct MinPlayers(u8);
+
+impl MinPlayers {
+    pub fn new(cnt: u8) -> Self {
+        Self(cnt)
+    }
+}
+
+impl From<u8> for MinPlayers {
+    fn from(value: u8) -> Self {
+        Self(value)
+    }
+}
+
+impl From<MinPlayers> for u8 {
+    fn from(value: MinPlayers) -> Self {
+        value.0
+    }
+}
+
+impl Transform<MinPlayers> for RequestBuilder {
+    fn transform(self, value: MinPlayers) -> Self {
+        self.query(&[("min_players", value.0)])
+    }
+}
+
+/// filter for tournament games.
+#[derive(Copy, Clone, Debug, Default)]
+pub struct TournamentGamesOnly(bool);
+
+impl TournamentGamesOnly {
+    pub fn new(cnt: bool) -> Self {
+        Self(cnt)
+    }
+}
+
+impl From<bool> for TournamentGamesOnly {
+    fn from(value: bool) -> Self {
+        Self(value)
+    }
+}
+
+impl From<TournamentGamesOnly> for bool {
+    fn from(value: TournamentGamesOnly) -> Self {
+        value.0
+    }
+}
+
+impl Transform<TournamentGamesOnly> for RequestBuilder {
+    fn transform(self, value: TournamentGamesOnly) -> Self {
+        self.query(&[("tournament_games_only", u8::from(value.0))])
+    }
+}
 
 /// These are parameters to API get_match_history
 /// This type is fairly complicated so you're advised to use the builder pattern here.
@@ -8,53 +68,35 @@ use crate::{dota2::Skill, TransformRequest};
 /// # Example
 /// ```rust,no_run
 /// use kez::dota2::get_match_history::MatchHistoryParameter;
+/// use kez::dota2::Hero;
 /// let parameter = MatchHistoryParameter::new()
-///                     .with_hero_id(145) // search for matches contains Kez
+///                     .with_hero(Hero::Kez) // search for matches contains Kez
 ///                     .with_min_players(10); // at least 10 human players
 /// ```
 #[derive(Copy, Clone, Debug, Default)]
 pub struct MatchHistoryParameter {
-    pub hero_id: Option<u8>,
-    pub game_mode: Option<u8>,
+    pub hero: Option<Hero>,
+    pub mode: Option<Mode>,
     pub skill: Option<Skill>,
-    pub min_players: Option<u8>,
-    pub account_id: Option<u64>,
-    pub league_id: Option<u64>,
-    pub start_at_match_id: Option<u64>,
-    pub matches_requested: Option<u8>,
-    pub tournament_games_only: Option<bool>,
+    pub min_players: Option<MinPlayers>,
+    pub account: Option<Account>,
+    pub league: Option<League>,
+    pub start_at_match_id: Option<StartAt<MatchId>>,
+    pub matches_requested: Option<MatchesRequested>,
+    pub tournament_games_only: Option<TournamentGamesOnly>,
 }
 
-impl TransformRequest for MatchHistoryParameter {
-    fn transform_request(&self, mut req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
-        if let Some(hero_id) = self.hero_id {
-            req = req.query(&[("hero_id", hero_id)]);
-        }
-        if let Some(game_mode) = self.game_mode {
-            req = req.query(&[("game_mode", game_mode)]);
-        }
-        if let Some(skill) = self.skill {
-            req = req.query(&[("skill", u8::from(skill))]);
-        }
-        if let Some(min_players) = self.min_players {
-            req = req.query(&[("min_players", min_players)]);
-        }
-        if let Some(account_id) = self.account_id {
-            req = req.query(&[("account_id", account_id)]);
-        }
-        if let Some(league_id) = self.league_id {
-            req = req.query(&[("league_id", league_id)]);
-        }
-        if let Some(start_at_match_id) = self.start_at_match_id {
-            req = req.query(&[("start_at_match_id", start_at_match_id)]);
-        }
-        if let Some(matches_requested) = self.matches_requested {
-            req = req.query(&[("matches_requested", matches_requested)]);
-        }
-        if let Some(tournament_games_only) = self.tournament_games_only {
-            req = req.query(&[("tournament_games_only", u8::from(tournament_games_only))]);
-        }
-        req
+impl Transform<MatchHistoryParameter> for RequestBuilder {
+    fn transform(self, value: MatchHistoryParameter) -> Self {
+        self.transform(value.hero)
+            .transform(value.mode)
+            .transform(value.skill)
+            .transform(value.min_players)
+            .transform(value.account)
+            .transform(value.league)
+            .transform(value.start_at_match_id)
+            .transform(value.matches_requested)
+            .transform(value.tournament_games_only)
     }
 }
 
@@ -63,13 +105,13 @@ impl MatchHistoryParameter {
         Self::default()
     }
 
-    pub fn with_hero_id(mut self, hero_id: u8) -> Self {
-        self.hero_id = Some(hero_id);
+    pub fn with_hero(mut self, hero: Hero) -> Self {
+        self.hero = Some(hero);
         self
     }
 
-    pub fn with_game_mode(mut self, game_mode: u8) -> Self {
-        self.game_mode = Some(game_mode);
+    pub fn with_game_mode(mut self, mode: Mode) -> Self {
+        self.mode = Some(mode);
         self
     }
 
@@ -79,32 +121,32 @@ impl MatchHistoryParameter {
     }
 
     pub fn with_min_players(mut self, min_players: u8) -> Self {
-        self.min_players = Some(min_players);
+        self.min_players = Some(min_players.into());
         self
     }
 
-    pub fn with_account_id(mut self, account_id: u64) -> Self {
-        self.account_id = Some(account_id);
+    pub fn with_account(mut self, account: Account) -> Self {
+        self.account = Some(account);
         self
     }
 
-    pub fn with_league_id(mut self, league_id: u64) -> Self {
-        self.league_id = Some(league_id);
+    pub fn with_league(mut self, league: League) -> Self {
+        self.league = Some(league);
         self
     }
 
     pub fn with_tournament_games_only(mut self, tournament_games_only: bool) -> Self {
-        self.tournament_games_only = Some(tournament_games_only);
+        self.tournament_games_only = Some(tournament_games_only.into());
         self
     }
 
-    pub fn with_start_at_match_id(mut self, start_at_match_id: u64) -> Self {
-        self.start_at_match_id = Some(start_at_match_id);
+    pub fn with_start_at_match_id(mut self, start_at_match_id: MatchId) -> Self {
+        self.start_at_match_id = Some(start_at_match_id.into());
         self
     }
 
     pub fn with_matches_requested(mut self, matches_requested: u8) -> Self {
-        self.matches_requested = Some(matches_requested);
+        self.matches_requested = Some(matches_requested.into());
         self
     }
 }

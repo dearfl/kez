@@ -1,62 +1,89 @@
+use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
-use crate::TransformRequest;
+use crate::{
+    dota2::{MatchSeqNum, MatchesRequested, StartAt},
+    Transform,
+};
 
 /// These are parameters to API get_match_history_by_seq_num
 /// The first parameter specifies which match the result should start with
 /// The second parameter specifies how many matches the result should contains.
 /// # Examples
 /// ```rust,no_run
-/// use kez::dota2::get_match_history_by_seq_num::MatchHistoryBySeqNumParameter;
+/// use kez::dota2::{get_match_history_by_seq_num::MatchHistoryBySeqNumParameter, MatchSeqNum};
 /// // 10 matches starting from match sequence number 10000
-/// let para: MatchHistoryBySeqNumParameter = (10000, 10).into();
+/// let para: MatchHistoryBySeqNumParameter = (MatchSeqNum::from(10000), 10).into();
 /// // 20 matches starting from match sequence number 20000
-/// let para = MatchHistoryBySeqNumParameter::new(20000, 20);
+/// let para = MatchHistoryBySeqNumParameter::new(MatchSeqNum::from(20000), 20);
 /// // 100 matches starting from match sequence number 0
 /// let para = MatchHistoryBySeqNumParameter::default();
 /// // 100 matches starting from match sequence number 30000
-/// let para = MatchHistoryBySeqNumParameter::start_at(30000);
+/// let para = MatchHistoryBySeqNumParameter::start_at(MatchSeqNum::from(30000));
 /// ```
 #[derive(Copy, Clone, Debug, Default)]
 pub struct MatchHistoryBySeqNumParameter {
-    pub start_at_match_seq_num: Option<u64>,
-    pub matches_requested: Option<u8>,
+    pub start_at_match_seq_num: Option<StartAt<MatchSeqNum>>,
+    pub matches_requested: Option<MatchesRequested>,
 }
 
 impl MatchHistoryBySeqNumParameter {
-    pub fn start_at(match_seq_num: u64) -> Self {
+    pub fn start_at(match_seq_num: MatchSeqNum) -> Self {
+        let start_at_match_seq_num = Some(StartAt::from(match_seq_num));
+        let matches_requested = None;
         Self {
-            start_at_match_seq_num: Some(match_seq_num),
-            matches_requested: None,
+            start_at_match_seq_num,
+            matches_requested,
         }
     }
 
-    pub fn new(start_at_match_seq_num: u64, matches_requested: u8) -> Self {
+    pub fn new(start_at_match_seq_num: MatchSeqNum, matches_requested: u8) -> Self {
+        let start_at_match_seq_num = Some(StartAt::from(start_at_match_seq_num));
+        let matches_requested = Some(MatchesRequested::from(matches_requested));
         Self {
-            start_at_match_seq_num: Some(start_at_match_seq_num),
-            matches_requested: Some(matches_requested),
-        }
-    }
-}
-
-impl From<(u64, u8)> for MatchHistoryBySeqNumParameter {
-    fn from((start_at_match_seq_num, matches_requested): (u64, u8)) -> Self {
-        Self {
-            start_at_match_seq_num: Some(start_at_match_seq_num),
-            matches_requested: Some(matches_requested),
+            start_at_match_seq_num,
+            matches_requested,
         }
     }
 }
 
-impl TransformRequest for MatchHistoryBySeqNumParameter {
-    fn transform_request(&self, mut req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
-        if let Some(start_at_match_seq_num) = self.start_at_match_seq_num {
-            req = req.query(&[("start_at_match_seq_num", start_at_match_seq_num)]);
-        };
-        if let Some(matches_requested) = self.matches_requested {
-            req = req.query(&[("matches_requested", matches_requested)]);
-        };
-        req
+impl From<(MatchSeqNum, u8)> for MatchHistoryBySeqNumParameter {
+    fn from((start_at_match_seq_num, matches_requested): (MatchSeqNum, u8)) -> Self {
+        let start_at_match_seq_num = Some(StartAt::from(start_at_match_seq_num));
+        let matches_requested = Some(MatchesRequested::from(matches_requested));
+        Self {
+            start_at_match_seq_num,
+            matches_requested,
+        }
+    }
+}
+
+impl From<MatchSeqNum> for MatchHistoryBySeqNumParameter {
+    fn from(start_at_match_seq_num: MatchSeqNum) -> Self {
+        let start_at_match_seq_num = Some(StartAt::from(start_at_match_seq_num));
+        let matches_requested = None;
+        Self {
+            start_at_match_seq_num,
+            matches_requested,
+        }
+    }
+}
+
+impl From<()> for MatchHistoryBySeqNumParameter {
+    fn from(_: ()) -> Self {
+        let start_at_match_seq_num = None;
+        let matches_requested = None;
+        Self {
+            start_at_match_seq_num,
+            matches_requested,
+        }
+    }
+}
+
+impl Transform<MatchHistoryBySeqNumParameter> for RequestBuilder {
+    fn transform(self, value: MatchHistoryBySeqNumParameter) -> Self {
+        self.transform(value.start_at_match_seq_num)
+            .transform(value.matches_requested)
     }
 }
 

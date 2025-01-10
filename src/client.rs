@@ -1,4 +1,4 @@
-use reqwest::{IntoUrl, StatusCode};
+use reqwest::{IntoUrl, RequestBuilder, StatusCode};
 use serde::Deserialize;
 
 use crate::{
@@ -7,7 +7,7 @@ use crate::{
         get_match_history::{MatchHistory, MatchHistoryParameter},
         get_match_history_by_seq_num::{MatchHistoryBySeqNum, MatchHistoryBySeqNumParameter},
     },
-    Config, Error, Response, Result, TransformRequest,
+    Config, Error, Response, Result, Transform,
 };
 
 /// Client is what used to request an API.
@@ -43,13 +43,12 @@ impl Client {
     }
 
     /// This function is a general function for varies Valve HTTP API.
-    pub(crate) async fn get<T>(&self, url: impl IntoUrl, para: impl TransformRequest) -> Result<T>
+    pub(crate) async fn get<T, P>(&self, url: impl IntoUrl, para: P) -> Result<T>
     where
-        T: for<'a> Deserialize<'a>,
+        T: for<'de> Deserialize<'de>,
+        RequestBuilder: for<'c> Transform<(&'c Config, P)>,
     {
-        let req = self.client.get(url);
-        let req = self.config.transform_request(req);
-        let req = para.transform_request(req);
+        let req = self.client.get(url).transform((&self.config, para));
 
         let resp = req.send().await.map_err(reqwest::Error::without_url)?;
         let status = resp.status();
@@ -67,14 +66,14 @@ impl Client {
     /// Request a sequence of matches by a start match sequence number and count.
     /// # Example:
     /// ```rust,no_run
-    /// use kez::Client;
+    /// use kez::{dota2::MatchSeqNum, Client};
     ///
     /// #[tokio::main]
     /// async fn main() -> anyhow::Result<()> {
     ///     
     ///   let client: Client = Client::new("MY_STEAM_API_KEY").expect("Failed to create client");
     ///   // request 100 matches starting from match sequence number 0
-    ///   let result = client.get_match_history_by_seq_num((0, 100)).await?;
+    ///   let result = client.get_match_history_by_seq_num(MatchSeqNum::from(0)).await?;
     ///   println!("{:?}", result);
     ///   Ok(())
     /// }
@@ -93,12 +92,13 @@ impl Client {
     /// ```rust,no_run
     /// use kez::Client;
     /// use kez::dota2::get_match_history::MatchHistoryParameter;
+    /// use kez::dota2::Hero;
     ///
     /// #[tokio::main]
     /// async fn main() -> anyhow::Result<()> {
     ///   let client: Client = Client::new("MY_STEAM_API_KEY").expect("Failed to create client");
     ///   // request 100 matches contains hero Kez starting from match id 0
-    ///   let filter = MatchHistoryParameter::new().with_hero_id(145).with_matches_requested(100);
+    ///   let filter = MatchHistoryParameter::new().with_hero(Hero::Kez).with_matches_requested(100);
     ///   let result = client.get_match_history(filter).await?;
     ///   println!("{:?}", result);
     ///   Ok(())
