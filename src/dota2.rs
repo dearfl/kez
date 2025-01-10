@@ -8,6 +8,7 @@ pub mod get_heroes;
 pub mod get_match_history;
 pub mod get_match_history_by_seq_num;
 pub mod hero;
+pub mod mode;
 pub mod skill;
 
 pub use hero::Hero;
