@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    dota2::{Account, Hero, Mode, Skill},
+    dota2::{Account, Hero, League, Mode, Skill},
     TransformRequest,
 };
 
@@ -51,7 +51,7 @@ pub struct MatchHistoryParameter {
     pub skill: Option<Skill>,
     pub min_players: Option<MinPlayers>,
     pub account: Option<Account>,
-    pub league_id: Option<u64>,
+    pub league: Option<League>,
     pub start_at_match_id: Option<u64>,
     pub matches_requested: Option<u8>,
     pub tournament_games_only: Option<bool>,
@@ -64,9 +64,7 @@ impl TransformRequest for MatchHistoryParameter {
         req = self.skill.transform_request(req);
         req = self.min_players.transform_request(req);
         req = self.account.transform_request(req);
-        if let Some(league_id) = self.league_id {
-            req = req.query(&[("league_id", league_id)]);
-        }
+        req = self.league.transform_request(req);
         if let Some(start_at_match_id) = self.start_at_match_id {
             req = req.query(&[("start_at_match_id", start_at_match_id)]);
         }
@@ -110,8 +108,8 @@ impl MatchHistoryParameter {
         self
     }
 
-    pub fn with_league_id(mut self, league_id: u64) -> Self {
-        self.league_id = Some(league_id);
+    pub fn with_league(mut self, league: League) -> Self {
+        self.league = Some(league);
         self
     }
 
