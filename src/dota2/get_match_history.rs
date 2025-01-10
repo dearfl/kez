@@ -5,6 +5,34 @@ use crate::{
     TransformRequest,
 };
 
+/// filter for matches with at least N human players.
+#[derive(Copy, Clone, Debug, Default)]
+pub struct MinPlayers(u8);
+
+impl MinPlayers {
+    pub fn new(cnt: u8) -> Self {
+        Self(cnt)
+    }
+}
+
+impl From<u8> for MinPlayers {
+    fn from(value: u8) -> Self {
+        Self(value)
+    }
+}
+
+impl From<MinPlayers> for u8 {
+    fn from(value: MinPlayers) -> Self {
+        value.0
+    }
+}
+
+impl TransformRequest for MinPlayers {
+    fn transform_request(&self, req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
+        req.query(&[("min_players", self.0)])
+    }
+}
+
 /// These are parameters to API get_match_history
 /// This type is fairly complicated so you're advised to use the builder pattern here.
 /// The type itself is also a builder so you can do something like these.
@@ -21,7 +49,7 @@ pub struct MatchHistoryParameter {
     pub hero: Option<Hero>,
     pub mode: Option<Mode>,
     pub skill: Option<Skill>,
-    pub min_players: Option<u8>,
+    pub min_players: Option<MinPlayers>,
     pub account_id: Option<u64>,
     pub league_id: Option<u64>,
     pub start_at_match_id: Option<u64>,
@@ -34,9 +62,7 @@ impl TransformRequest for MatchHistoryParameter {
         req = self.hero.transform_request(req);
         req = self.mode.transform_request(req);
         req = self.skill.transform_request(req);
-        if let Some(min_players) = self.min_players {
-            req = req.query(&[("min_players", min_players)]);
-        }
+        req = self.min_players.transform_request(req);
         if let Some(account_id) = self.account_id {
             req = req.query(&[("account_id", account_id)]);
         }
@@ -77,7 +103,7 @@ impl MatchHistoryParameter {
     }
 
     pub fn with_min_players(mut self, min_players: u8) -> Self {
-        self.min_players = Some(min_players);
+        self.min_players = Some(min_players.into());
         self
     }
 
