@@ -46,5 +46,5 @@ pub struct Hero {
 pub struct Heroes {
     pub status: u8,
     pub count: u8,
-    pub matches: Vec<Hero>,
+    pub heroes: Vec<Hero>,
 }
