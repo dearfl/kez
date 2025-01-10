@@ -115,7 +115,10 @@ pub struct Player {
     #[serde(default)]
     pub account_id: u32,
     pub player_slot: u8,
+    pub team_number: u8,
+    pub team_slot: u8,
     pub hero_id: u8,
+    pub hero_variant: u8,
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug, Default)]
