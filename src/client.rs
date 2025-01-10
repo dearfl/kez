@@ -1,4 +1,4 @@
-use reqwest::{IntoUrl, StatusCode};
+use reqwest::{IntoUrl, RequestBuilder, StatusCode};
 use serde::Deserialize;
 
 use crate::{
@@ -7,7 +7,7 @@ use crate::{
         get_match_history::{MatchHistory, MatchHistoryParameter},
         get_match_history_by_seq_num::{MatchHistoryBySeqNum, MatchHistoryBySeqNumParameter},
     },
-    Config, Error, Response, Result, TransformRequest,
+    Config, Error, Response, Result, Transform,
 };
 
 /// Client is what used to request an API.
@@ -43,13 +43,12 @@ impl Client {
     }
 
     /// This function is a general function for varies Valve HTTP API.
-    pub(crate) async fn get<T>(&self, url: impl IntoUrl, para: impl TransformRequest) -> Result<T>
+    pub(crate) async fn get<T, P>(&self, url: impl IntoUrl, para: P) -> Result<T>
     where
-        T: for<'a> Deserialize<'a>,
+        T: for<'de> Deserialize<'de>,
+        RequestBuilder: for<'c> Transform<(&'c Config, P)>,
     {
-        let req = self.client.get(url);
-        let req = self.config.transform_request(req);
-        let req = para.transform_request(req);
+        let req = self.client.get(url).transform((&self.config, para));
 
         let resp = req.send().await.map_err(reqwest::Error::without_url)?;
         let status = resp.status();

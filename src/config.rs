@@ -1,4 +1,6 @@
-use crate::TransformRequest;
+use reqwest::RequestBuilder;
+
+use crate::Transform;
 
 /// A simple wrapper type for API KEY.
 #[derive(Debug, Clone)]
@@ -13,9 +15,9 @@ where
     }
 }
 
-impl TransformRequest for Key {
-    fn transform_request(&self, req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
-        req.query(&[("key", &self.0)])
+impl Transform<&Key> for RequestBuilder {
+    fn transform(self, value: &Key) -> Self {
+        self.query(&[("key", &value.0)])
     }
 }
 
@@ -45,8 +47,8 @@ where
     }
 }
 
-impl TransformRequest for Config {
-    fn transform_request(&self, req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
-        self.key.transform_request(req)
+impl Transform<&Config> for RequestBuilder {
+    fn transform(self, value: &Config) -> Self {
+        self.transform(&value.key)
     }
 }

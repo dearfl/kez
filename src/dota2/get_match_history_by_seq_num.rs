@@ -1,6 +1,7 @@
+use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
-use crate::TransformRequest;
+use crate::Transform;
 
 /// These are parameters to API get_match_history_by_seq_num
 /// The first parameter specifies which match the result should start with
@@ -48,12 +49,13 @@ impl From<(u64, u8)> for MatchHistoryBySeqNumParameter {
     }
 }
 
-impl TransformRequest for MatchHistoryBySeqNumParameter {
-    fn transform_request(&self, mut req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
-        if let Some(start_at_match_seq_num) = self.start_at_match_seq_num {
+impl Transform<MatchHistoryBySeqNumParameter> for RequestBuilder {
+    fn transform(self, value: MatchHistoryBySeqNumParameter) -> Self {
+        let mut req = self;
+        if let Some(start_at_match_seq_num) = value.start_at_match_seq_num {
             req = req.query(&[("start_at_match_seq_num", start_at_match_seq_num)]);
         };
-        if let Some(matches_requested) = self.matches_requested {
+        if let Some(matches_requested) = value.matches_requested {
             req = req.query(&[("matches_requested", matches_requested)]);
         };
         req

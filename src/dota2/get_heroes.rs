@@ -1,19 +1,17 @@
+use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
-use crate::TransformRequest;
+use crate::Transform;
 
 #[derive(Copy, Clone, Debug, Default)]
 pub struct GetHeroesParameter {
-    /// I have no idea what this is, and we should have another parameter language
-    /// but I've decided to add language as a common parameter for all APIs.
     pub itemizedonly: Option<bool>,
 }
 
 impl From<bool> for GetHeroesParameter {
     fn from(value: bool) -> Self {
-        Self {
-            itemizedonly: Some(value),
-        }
+        let itemizedonly = Some(value.into());
+        Self { itemizedonly }
     }
 }
 
@@ -23,12 +21,12 @@ impl From<()> for GetHeroesParameter {
     }
 }
 
-impl TransformRequest for GetHeroesParameter {
-    fn transform_request(&self, mut req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
-        if let Some(itemizedonly) = self.itemizedonly {
-            req = req.query(&[("itemizedonly", u8::from(itemizedonly))]);
+impl Transform<GetHeroesParameter> for RequestBuilder {
+    fn transform(self, value: GetHeroesParameter) -> Self {
+        match value.itemizedonly {
+            Some(value) => self.query(&[("itemizedonly", u8::from(value))]),
+            None => self,
         }
-        req
     }
 }
 

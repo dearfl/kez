@@ -1,4 +1,6 @@
-use crate::TransformRequest;
+use reqwest::RequestBuilder;
+
+use crate::Transform;
 
 /// League repr
 #[non_exhaustive]
@@ -33,8 +35,8 @@ impl From<League> for u64 {
     }
 }
 
-impl TransformRequest for League {
-    fn transform_request(&self, req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
-        req.query(&[("league_id", u64::from(*self))])
+impl Transform<League> for RequestBuilder {
+    fn transform(self, value: League) -> Self {
+        self.query(&[("league_id", u64::from(value))])
     }
 }

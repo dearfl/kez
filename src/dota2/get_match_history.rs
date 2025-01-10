@@ -1,8 +1,9 @@
+use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
 use crate::{
     dota2::{Account, Hero, League, Mode, Skill},
-    TransformRequest,
+    Transform,
 };
 
 /// filter for matches with at least N human players.
@@ -27,9 +28,9 @@ impl From<MinPlayers> for u8 {
     }
 }
 
-impl TransformRequest for MinPlayers {
-    fn transform_request(&self, req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
-        req.query(&[("min_players", self.0)])
+impl Transform<MinPlayers> for RequestBuilder {
+    fn transform(self, value: MinPlayers) -> Self {
+        self.query(&[("min_players", value.0)])
     }
 }
 
@@ -57,21 +58,22 @@ pub struct MatchHistoryParameter {
     pub tournament_games_only: Option<bool>,
 }
 
-impl TransformRequest for MatchHistoryParameter {
-    fn transform_request(&self, mut req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
-        req = self.hero.transform_request(req);
-        req = self.mode.transform_request(req);
-        req = self.skill.transform_request(req);
-        req = self.min_players.transform_request(req);
-        req = self.account.transform_request(req);
-        req = self.league.transform_request(req);
-        if let Some(start_at_match_id) = self.start_at_match_id {
+impl Transform<MatchHistoryParameter> for RequestBuilder {
+    fn transform(self, value: MatchHistoryParameter) -> Self {
+        let mut req = self
+            .transform(value.hero)
+            .transform(value.mode)
+            .transform(value.skill)
+            .transform(value.min_players)
+            .transform(value.account)
+            .transform(value.league);
+        if let Some(start_at_match_id) = value.start_at_match_id {
             req = req.query(&[("start_at_match_id", start_at_match_id)]);
         }
-        if let Some(matches_requested) = self.matches_requested {
+        if let Some(matches_requested) = value.matches_requested {
             req = req.query(&[("matches_requested", matches_requested)]);
         }
-        if let Some(tournament_games_only) = self.tournament_games_only {
+        if let Some(tournament_games_only) = value.tournament_games_only {
             req = req.query(&[("tournament_games_only", u8::from(tournament_games_only))]);
         }
         req

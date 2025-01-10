@@ -9,23 +9,34 @@ pub use config::Config;
 pub use error::Error;
 use response::Response;
 
-use reqwest::RequestBuilder;
-
 pub type Result<T, E = Error> = std::result::Result<T, E>;
 
-/// TransformRequest is trait for literally transform request like add parameters.
+/// Transform is trait for literally transform request like add parameters.
 /// Implement this trait for Config and varies Parameters make the inner get method
 /// Generic.
-trait TransformRequest {
-    fn transform_request(&self, req: RequestBuilder) -> RequestBuilder;
+trait Transform<T> {
+    fn transform(self, value: T) -> Self;
 }
 
-/// impl TransformRequest for Option<T> where T: Transform for ease of use
-impl<T: TransformRequest> TransformRequest for Option<T> {
-    fn transform_request(&self, req: RequestBuilder) -> RequestBuilder {
-        match self {
-            Some(value) => value.transform_request(req),
-            None => req,
+/// generic impl Transform<Option<T>> for ease of use
+impl<T, S> Transform<Option<T>> for S
+where
+    S: Transform<T>,
+{
+    fn transform(self, value: Option<T>) -> Self {
+        match value {
+            Some(value) => self.transform(value),
+            None => self,
         }
+    }
+}
+
+/// generic impl Transform<(T1, T2)> for ease of use
+impl<T1, T2, S> Transform<(T1, T2)> for S
+where
+    S: Transform<T1> + Transform<T2>,
+{
+    fn transform(self, (v1, v2): (T1, T2)) -> Self {
+        self.transform(v1).transform(v2)
     }
 }

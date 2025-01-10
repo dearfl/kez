@@ -1,4 +1,6 @@
-use crate::TransformRequest;
+use reqwest::RequestBuilder;
+
+use crate::Transform;
 
 /// User account repr
 #[non_exhaustive]
@@ -40,8 +42,8 @@ impl From<Account> for u64 {
     }
 }
 
-impl TransformRequest for Account {
-    fn transform_request(&self, req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
-        req.query(&[("account_id", u64::from(*self))])
+impl Transform<Account> for RequestBuilder {
+    fn transform(self, value: Account) -> Self {
+        self.query(&[("account_id", u64::from(value))])
     }
 }
