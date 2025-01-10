@@ -34,6 +34,6 @@ jobs:
         prefix-key: ${{ matrix.os }}-${{ matrix.target }}-${{ matrix.toolchain }}
 
     - name: Daily Check
-      run: cargo run --example detect-valve-api-change --feature deny-unknown-fields -- ${{ secrets.DEV_STEAM_API_KEY }}
+      run: cargo run --example detect-valve-api-change --features deny-unknown-fields -- ${{ secrets.DEV_STEAM_API_KEY }}
 
     # Maybe create an issue in the future?
