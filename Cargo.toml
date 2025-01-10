@@ -1,7 +1,12 @@
 [package]
 name = "kez"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
+license = "GLWTPL"
+description = "Dota2 web api"
+repository = "https://github.com/dearfl/kez"
+keywords = ["dota2"]
+exclude = [".*"]
 
 [dependencies]
 reqwest = "0.12.12"
