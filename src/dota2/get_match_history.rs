@@ -125,6 +125,10 @@ pub struct Match {
     pub start_time: u64,
     pub match_id: u64,
     pub match_seq_num: u64,
+    #[serde(default)]
+    pub radiant_team_id: u64,
+    #[serde(default)]
+    pub dire_team_id: u64,
     pub lobby_type: u8,
 }
 
