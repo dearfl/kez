@@ -2,11 +2,15 @@ mod client;
 mod config;
 pub mod dota2;
 mod error;
+mod format;
+mod language;
 mod response;
 
 pub use client::Client;
 pub use config::Config;
 pub use error::Error;
+pub use format::Format;
+pub use language::Language;
 use response::Response;
 
 pub type Result<T, E = Error> = std::result::Result<T, E>;

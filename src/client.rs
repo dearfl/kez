@@ -70,7 +70,6 @@ impl Client {
     ///
     /// #[tokio::main]
     /// async fn main() -> anyhow::Result<()> {
-    ///     
     ///   let client: Client = Client::new("MY_STEAM_API_KEY").expect("Failed to create client");
     ///   // request 100 matches starting from match sequence number 0
     ///   let result = client.get_match_history_by_seq_num(MatchSeqNum::from(0)).await?;
