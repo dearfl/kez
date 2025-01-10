@@ -6,10 +6,10 @@ use crate::Transform;
 ///  - json
 ///  - xml
 ///  - vdf
-/// Currently we only support json.
 #[non_exhaustive]
 #[derive(Clone, Copy, Debug, Default)]
 pub enum Format {
+    /// Currently we only support json.
     #[default]
     Json,
 }
