@@ -1,3 +1,5 @@
+use crate::TransformRequest;
+
 /// Game Mode enum
 #[non_exhaustive]
 #[repr(u8)]
@@ -70,5 +72,11 @@ impl From<Mode> for u8 {
             Mode::CompendiumMatchmaking => 14,
             Mode::CaptainsDraft => 16,
         }
+    }
+}
+
+impl TransformRequest for Mode {
+    fn transform_request(&self, req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
+        req.query(&[("game_mode", u8::from(*self))])
     }
 }

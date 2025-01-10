@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    dota2::{Hero, Skill},
+    dota2::{Hero, Mode, Skill},
     TransformRequest,
 };
 
@@ -19,7 +19,7 @@ use crate::{
 #[derive(Copy, Clone, Debug, Default)]
 pub struct MatchHistoryParameter {
     pub hero: Option<Hero>,
-    pub game_mode: Option<u8>,
+    pub mode: Option<Mode>,
     pub skill: Option<Skill>,
     pub min_players: Option<u8>,
     pub account_id: Option<u64>,
@@ -32,9 +32,7 @@ pub struct MatchHistoryParameter {
 impl TransformRequest for MatchHistoryParameter {
     fn transform_request(&self, mut req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
         req = self.hero.transform_request(req);
-        if let Some(game_mode) = self.game_mode {
-            req = req.query(&[("game_mode", game_mode)]);
-        }
+        req = self.mode.transform_request(req);
         req = self.skill.transform_request(req);
         if let Some(min_players) = self.min_players {
             req = req.query(&[("min_players", min_players)]);
@@ -68,8 +66,8 @@ impl MatchHistoryParameter {
         self
     }
 
-    pub fn with_game_mode(mut self, game_mode: u8) -> Self {
-        self.game_mode = Some(game_mode);
+    pub fn with_game_mode(mut self, mode: Mode) -> Self {
+        self.mode = Some(mode);
         self
     }
 
