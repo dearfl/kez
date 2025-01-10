@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::TransformRequest;
+use crate::{dota2::Skill, TransformRequest};
 
 /// These are parameters to API get_match_history
 /// This type is fairly complicated so you're advised to use the builder pattern here.
@@ -16,7 +16,7 @@ use crate::TransformRequest;
 pub struct MatchHistoryParameter {
     pub hero_id: Option<u8>,
     pub game_mode: Option<u8>,
-    pub skill: Option<u8>,
+    pub skill: Option<Skill>,
     pub min_players: Option<u8>,
     pub account_id: Option<u64>,
     pub league_id: Option<u64>,
@@ -34,7 +34,7 @@ impl TransformRequest for MatchHistoryParameter {
             req = req.query(&[("game_mode", game_mode)]);
         }
         if let Some(skill) = self.skill {
-            req = req.query(&[("skill", skill)]);
+            req = req.query(&[("skill", u8::from(skill))]);
         }
         if let Some(min_players) = self.min_players {
             req = req.query(&[("min_players", min_players)]);
@@ -73,7 +73,7 @@ impl MatchHistoryParameter {
         self
     }
 
-    pub fn with_skill(mut self, skill: u8) -> Self {
+    pub fn with_skill(mut self, skill: Skill) -> Self {
         self.skill = Some(skill);
         self
     }
