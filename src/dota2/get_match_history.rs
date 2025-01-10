@@ -34,6 +34,34 @@ impl Transform<MinPlayers> for RequestBuilder {
     }
 }
 
+/// filter for tournament games.
+#[derive(Copy, Clone, Debug, Default)]
+pub struct TournamentGamesOnly(bool);
+
+impl TournamentGamesOnly {
+    pub fn new(cnt: bool) -> Self {
+        Self(cnt)
+    }
+}
+
+impl From<bool> for TournamentGamesOnly {
+    fn from(value: bool) -> Self {
+        Self(value)
+    }
+}
+
+impl From<TournamentGamesOnly> for bool {
+    fn from(value: TournamentGamesOnly) -> Self {
+        value.0
+    }
+}
+
+impl Transform<TournamentGamesOnly> for RequestBuilder {
+    fn transform(self, value: TournamentGamesOnly) -> Self {
+        self.query(&[("tournament_games_only", u8::from(value.0))])
+    }
+}
+
 /// These are parameters to API get_match_history
 /// This type is fairly complicated so you're advised to use the builder pattern here.
 /// The type itself is also a builder so you can do something like these.
@@ -55,24 +83,20 @@ pub struct MatchHistoryParameter {
     pub league: Option<League>,
     pub start_at_match_id: Option<StartAt<MatchId>>,
     pub matches_requested: Option<MatchesRequested>,
-    pub tournament_games_only: Option<bool>,
+    pub tournament_games_only: Option<TournamentGamesOnly>,
 }
 
 impl Transform<MatchHistoryParameter> for RequestBuilder {
     fn transform(self, value: MatchHistoryParameter) -> Self {
-        let mut req = self
-            .transform(value.hero)
+        self.transform(value.hero)
             .transform(value.mode)
             .transform(value.skill)
             .transform(value.min_players)
             .transform(value.account)
             .transform(value.league)
             .transform(value.start_at_match_id)
-            .transform(value.matches_requested);
-        if let Some(tournament_games_only) = value.tournament_games_only {
-            req = req.query(&[("tournament_games_only", u8::from(tournament_games_only))]);
-        }
-        req
+            .transform(value.matches_requested)
+            .transform(value.tournament_games_only)
     }
 }
 
@@ -112,17 +136,17 @@ impl MatchHistoryParameter {
     }
 
     pub fn with_tournament_games_only(mut self, tournament_games_only: bool) -> Self {
-        self.tournament_games_only = Some(tournament_games_only);
+        self.tournament_games_only = Some(tournament_games_only.into());
         self
     }
 
     pub fn with_start_at_match_id(mut self, start_at_match_id: MatchId) -> Self {
-        self.start_at_match_id = Some(StartAt::from(start_at_match_id));
+        self.start_at_match_id = Some(start_at_match_id.into());
         self
     }
 
     pub fn with_matches_requested(mut self, matches_requested: u8) -> Self {
-        self.matches_requested = Some(MatchesRequested::from(matches_requested));
+        self.matches_requested = Some(matches_requested.into());
         self
     }
 }
