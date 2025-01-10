@@ -14,3 +14,4 @@ Kez is the newest hero added to dota2 as of the time this crate is created(2025/
 
  - get_match_history_by_seq_num: this is the primary APIs used by varies dota2 data websites now, you can requests at most 100 matches with this APIs in one request, and it gives back the most detailed match information like get_match_detail(this is not working right now).
  - get_match_history: this is the API for you if you want to find some specific matches, for example with specific hero or player. However this API is very hard to use IMO.
+ - get_heroes: request a list of current available heroes.
