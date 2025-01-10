@@ -1,3 +1,5 @@
+use crate::TransformRequest;
+
 /// Skill level of player or match.
 #[non_exhaustive]
 #[repr(u8)]
@@ -34,5 +36,11 @@ impl From<Skill> for u8 {
             Skill::High => 2,
             Skill::VeryHigh => 3,
         }
+    }
+}
+
+impl TransformRequest for Skill {
+    fn transform_request(&self, req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
+        req.query(&[("skill", u8::from(*self))])
     }
 }

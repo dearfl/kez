@@ -33,9 +33,7 @@ impl TransformRequest for MatchHistoryParameter {
         if let Some(game_mode) = self.game_mode {
             req = req.query(&[("game_mode", game_mode)]);
         }
-        if let Some(skill) = self.skill {
-            req = req.query(&[("skill", u8::from(skill))]);
-        }
+        req = self.skill.transform_request(req);
         if let Some(min_players) = self.min_players {
             req = req.query(&[("min_players", min_players)]);
         }
