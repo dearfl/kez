@@ -1,5 +1,24 @@
 use crate::TransformRequest;
 
+/// A simple wrapper type for API KEY.
+#[derive(Debug, Clone)]
+pub struct Key(String);
+
+impl<S> From<S> for Key
+where
+    S: Into<String>,
+{
+    fn from(value: S) -> Self {
+        Self(value.into())
+    }
+}
+
+impl TransformRequest for Key {
+    fn transform_request(&self, req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
+        req.query(&[("key", &self.0)])
+    }
+}
+
 /// Config is the common parameters for steam api requests.
 /// Most of steam http api have 3 common parameters:
 ///   - key: String, the API KEY used for requesting these APIs.
@@ -12,13 +31,13 @@ use crate::TransformRequest;
 /// ```
 #[derive(Debug, Clone)]
 pub struct Config {
-    pub(crate) key: String,
+    pub(crate) key: Key,
     // TODO:  add optional parameter: format & language
 }
 
 impl<S> From<S> for Config
 where
-    S: Into<String>,
+    S: Into<Key>,
 {
     fn from(value: S) -> Self {
         let key = value.into();
@@ -28,6 +47,6 @@ where
 
 impl TransformRequest for Config {
     fn transform_request(&self, req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
-        req.query(&[("key", &self.key)])
+        self.key.transform_request(req)
     }
 }
