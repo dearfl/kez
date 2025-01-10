@@ -9,11 +9,9 @@ use crate::Transform;
 pub enum Account {
     /// I'm actually not sure 0 => Bot
     Bot,
-    /// should be u64::MAX => Anonymous
+    /// should be u32::MAX(4294967295) => Anonymous
     Anonymous,
-    /// Other id should be non-anonymous human user
-    /// u32 actually? but we stick to u64 for now.
-    User(u64),
+    User(u32),
 }
 
 impl Default for Account {
@@ -22,21 +20,21 @@ impl Default for Account {
     }
 }
 
-impl From<u64> for Account {
-    fn from(value: u64) -> Self {
+impl From<u32> for Account {
+    fn from(value: u32) -> Self {
         match value {
             0 => Self::Bot,
-            u64::MAX => Self::Anonymous,
+            u32::MAX => Self::Anonymous,
             id => Self::User(id),
         }
     }
 }
 
-impl From<Account> for u64 {
+impl From<Account> for u32 {
     fn from(value: Account) -> Self {
         match value {
             Account::Bot => 0,
-            Account::Anonymous => u64::MAX,
+            Account::Anonymous => u32::MAX,
             Account::User(id) => id,
         }
     }
@@ -44,6 +42,6 @@ impl From<Account> for u64 {
 
 impl Transform<Account> for RequestBuilder {
     fn transform(self, value: Account) -> Self {
-        self.query(&[("account_id", u64::from(value))])
+        self.query(&[("account_id", u32::from(value))])
     }
 }
