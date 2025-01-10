@@ -12,6 +12,7 @@ pub mod get_match_history_by_seq_num;
 pub mod account;
 pub mod hero;
 pub mod league;
+pub mod r#match;
 pub mod mode;
 pub mod skill;
 
@@ -19,4 +20,5 @@ pub use account::Account;
 pub use hero::Hero;
 pub use league::League;
 pub use mode::Mode;
+pub use r#match::{MatchId, MatchSeqNum, MatchesRequested, StartAt};
 pub use skill::Skill;

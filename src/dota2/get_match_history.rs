@@ -2,7 +2,7 @@ use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    dota2::{Account, Hero, League, Mode, Skill},
+    dota2::{Account, Hero, League, MatchId, MatchesRequested, Mode, Skill, StartAt},
     Transform,
 };
 
@@ -53,8 +53,8 @@ pub struct MatchHistoryParameter {
     pub min_players: Option<MinPlayers>,
     pub account: Option<Account>,
     pub league: Option<League>,
-    pub start_at_match_id: Option<u64>,
-    pub matches_requested: Option<u8>,
+    pub start_at_match_id: Option<StartAt<MatchId>>,
+    pub matches_requested: Option<MatchesRequested>,
     pub tournament_games_only: Option<bool>,
 }
 
@@ -66,13 +66,9 @@ impl Transform<MatchHistoryParameter> for RequestBuilder {
             .transform(value.skill)
             .transform(value.min_players)
             .transform(value.account)
-            .transform(value.league);
-        if let Some(start_at_match_id) = value.start_at_match_id {
-            req = req.query(&[("start_at_match_id", start_at_match_id)]);
-        }
-        if let Some(matches_requested) = value.matches_requested {
-            req = req.query(&[("matches_requested", matches_requested)]);
-        }
+            .transform(value.league)
+            .transform(value.start_at_match_id)
+            .transform(value.matches_requested);
         if let Some(tournament_games_only) = value.tournament_games_only {
             req = req.query(&[("tournament_games_only", u8::from(tournament_games_only))]);
         }
@@ -120,13 +116,13 @@ impl MatchHistoryParameter {
         self
     }
 
-    pub fn with_start_at_match_id(mut self, start_at_match_id: u64) -> Self {
-        self.start_at_match_id = Some(start_at_match_id);
+    pub fn with_start_at_match_id(mut self, start_at_match_id: MatchId) -> Self {
+        self.start_at_match_id = Some(StartAt::from(start_at_match_id));
         self
     }
 
     pub fn with_matches_requested(mut self, matches_requested: u8) -> Self {
-        self.matches_requested = Some(matches_requested);
+        self.matches_requested = Some(MatchesRequested::from(matches_requested));
         self
     }
 }

@@ -4,7 +4,7 @@ use clap::Parser;
 use kez::{
     dota2::{
         get_match_history::MatchHistoryParameter,
-        get_match_history_by_seq_num::MatchHistoryBySeqNumParameter, Hero,
+        get_match_history_by_seq_num::MatchHistoryBySeqNumParameter, r#match::MatchSeqNum, Hero,
     },
     Client, Error,
 };
@@ -67,7 +67,7 @@ async fn main() -> anyhow::Result<()> {
                 .matches
                 .iter()
                 .fold(0, |init, mat| std::cmp::max(init, mat.match_seq_num));
-            MatchHistoryBySeqNumParameter::start_at(match_seq_num)
+            MatchSeqNum::from(match_seq_num).into()
         }
         Err(Error::DecodeError(err, content)) => {
             anyhow::bail!("DecodeError: {err}\nContent: {content}");

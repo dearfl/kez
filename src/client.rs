@@ -66,14 +66,14 @@ impl Client {
     /// Request a sequence of matches by a start match sequence number and count.
     /// # Example:
     /// ```rust,no_run
-    /// use kez::Client;
+    /// use kez::{dota2::MatchSeqNum, Client};
     ///
     /// #[tokio::main]
     /// async fn main() -> anyhow::Result<()> {
     ///     
     ///   let client: Client = Client::new("MY_STEAM_API_KEY").expect("Failed to create client");
     ///   // request 100 matches starting from match sequence number 0
-    ///   let result = client.get_match_history_by_seq_num((0, 100)).await?;
+    ///   let result = client.get_match_history_by_seq_num(MatchSeqNum::from(0)).await?;
     ///   println!("{:?}", result);
     ///   Ok(())
     /// }
