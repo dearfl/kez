@@ -21,3 +21,6 @@ tokio = { version = "1.43.0", features = ["full"] }
 
 [features]
 deny-unknown-fields = []
+
+[lints.rust]
+unsafe_code = "forbid"
