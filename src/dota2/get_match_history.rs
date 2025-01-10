@@ -1,6 +1,9 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{dota2::Skill, TransformRequest};
+use crate::{
+    dota2::{Hero, Skill},
+    TransformRequest,
+};
 
 /// These are parameters to API get_match_history
 /// This type is fairly complicated so you're advised to use the builder pattern here.
@@ -8,13 +11,14 @@ use crate::{dota2::Skill, TransformRequest};
 /// # Example
 /// ```rust,no_run
 /// use kez::dota2::get_match_history::MatchHistoryParameter;
+/// use kez::dota2::Hero;
 /// let parameter = MatchHistoryParameter::new()
-///                     .with_hero_id(145) // search for matches contains Kez
+///                     .with_hero(Hero::Kez) // search for matches contains Kez
 ///                     .with_min_players(10); // at least 10 human players
 /// ```
 #[derive(Copy, Clone, Debug, Default)]
 pub struct MatchHistoryParameter {
-    pub hero_id: Option<u8>,
+    pub hero: Option<Hero>,
     pub game_mode: Option<u8>,
     pub skill: Option<Skill>,
     pub min_players: Option<u8>,
@@ -27,9 +31,7 @@ pub struct MatchHistoryParameter {
 
 impl TransformRequest for MatchHistoryParameter {
     fn transform_request(&self, mut req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
-        if let Some(hero_id) = self.hero_id {
-            req = req.query(&[("hero_id", hero_id)]);
-        }
+        req = self.hero.transform_request(req);
         if let Some(game_mode) = self.game_mode {
             req = req.query(&[("game_mode", game_mode)]);
         }
@@ -61,8 +63,8 @@ impl MatchHistoryParameter {
         Self::default()
     }
 
-    pub fn with_hero_id(mut self, hero_id: u8) -> Self {
-        self.hero_id = Some(hero_id);
+    pub fn with_hero(mut self, hero: Hero) -> Self {
+        self.hero = Some(hero);
         self
     }
 

@@ -1,3 +1,5 @@
+use crate::TransformRequest;
+
 /// Available heros in current dota2
 /// # Example
 /// ```rust,no_run
@@ -415,5 +417,11 @@ impl From<Hero> for u8 {
             Hero::Muerta => 138,
             Hero::Kez => 145,
         }
+    }
+}
+
+impl TransformRequest for Hero {
+    fn transform_request(&self, req: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
+        req.query(&[("hero_id", u8::from(*self))])
     }
 }
