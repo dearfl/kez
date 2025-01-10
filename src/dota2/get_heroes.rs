@@ -3,9 +3,26 @@ use serde::{Deserialize, Serialize};
 
 use crate::Transform;
 
+/// I have no idea what this is, and we should have another parameter language
+/// but I've decided to add language as a common parameter for all APIs.
+#[derive(Copy, Clone, Debug, Default)]
+pub struct ItemizedOnly(bool);
+
 #[derive(Copy, Clone, Debug, Default)]
 pub struct GetHeroesParameter {
-    pub itemizedonly: Option<bool>,
+    pub itemizedonly: Option<ItemizedOnly>,
+}
+
+impl From<bool> for ItemizedOnly {
+    fn from(value: bool) -> Self {
+        Self(value)
+    }
+}
+
+impl Transform<ItemizedOnly> for RequestBuilder {
+    fn transform(self, value: ItemizedOnly) -> Self {
+        self.query(&[("itemizedonly", u8::from(value.0))])
+    }
 }
 
 impl From<bool> for GetHeroesParameter {
@@ -23,10 +40,7 @@ impl From<()> for GetHeroesParameter {
 
 impl Transform<GetHeroesParameter> for RequestBuilder {
     fn transform(self, value: GetHeroesParameter) -> Self {
-        match value.itemizedonly {
-            Some(value) => self.query(&[("itemizedonly", u8::from(value))]),
-            None => self,
-        }
+        self.transform(value.itemizedonly)
     }
 }
 
