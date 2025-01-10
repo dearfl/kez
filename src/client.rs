@@ -3,6 +3,7 @@ use serde::Deserialize;
 
 use crate::{
     dota2::{
+        get_heroes::{GetHeroesParameter, Heroes},
         get_match_history::{MatchHistory, MatchHistoryParameter},
         get_match_history_by_seq_num::{MatchHistoryBySeqNum, MatchHistoryBySeqNumParameter},
     },
@@ -21,7 +22,7 @@ impl Client {
     /// # Example:
     /// ```rust,no_run
     /// use kez::Client;
-    /// let client: Client = Client::new("MY_STEAM_API_KEY").expect("Failed to construct client");
+    /// let client: Client = Client::new("MY_STEAM_API_KEY").expect("Failed to create client");
     /// ```
     pub fn new<C: Into<Config>>(config: C) -> Result<Self> {
         let config = config.into();
@@ -69,7 +70,7 @@ impl Client {
     /// use kez::Client;
     ///
     /// #[tokio::main]
-    /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    /// async fn main() -> anyhow::Result<()> {
     ///     
     ///   let client: Client = Client::new("MY_STEAM_API_KEY").expect("Failed to create client");
     ///   // request 100 matches starting from match sequence number 0
@@ -94,7 +95,7 @@ impl Client {
     /// use kez::dota2::get_match_history::MatchHistoryParameter;
     ///
     /// #[tokio::main]
-    /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    /// async fn main() -> anyhow::Result<()> {
     ///   let client: Client = Client::new("MY_STEAM_API_KEY").expect("Failed to create client");
     ///   // request 100 matches contains hero Kez starting from match id 0
     ///   let filter = MatchHistoryParameter::new().with_hero_id(145).with_matches_requested(100);
@@ -108,6 +109,32 @@ impl Client {
         P: Into<MatchHistoryParameter>,
     {
         const URL: &str = "https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1";
+        self.get(URL, para.into()).await
+    }
+
+    /// Request a list of current available heroes.
+    /// # Example:
+    /// ```rust,no_run
+    /// use kez::Client;
+    /// use kez::dota2::get_heroes::GetHeroesParameter;
+    ///
+    /// #[tokio::main]
+    /// async fn main() -> anyhow::Result<()> {
+    ///   let client: Client = Client::new("MY_STEAM_API_KEY").expect("Failed to create client");
+    ///   // request current hero list
+    ///   // () will be converted to GetHeroesParameter::default()
+    ///   // you could also use true to specify itemizedonly to true
+    ///   // let heroes = client.get_heroes(true).await?;
+    ///   let heroes = client.get_heroes(()).await?;
+    ///   println!("{:?}", heroes);
+    ///   Ok(())
+    /// }
+    /// ```
+    pub async fn get_heroes<P>(&self, para: P) -> Result<Heroes>
+    where
+        P: Into<GetHeroesParameter>,
+    {
+        const URL: &str = "https://api.steampowered.com/IEconDOTA2_570/GetHeroes/V1";
         self.get(URL, para.into()).await
     }
 }
