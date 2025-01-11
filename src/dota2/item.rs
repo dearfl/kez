@@ -512,3 +512,12 @@ define_dota2_enum! {
         OfrendaPledge = 4302,
     }
 }
+
+impl Item {
+    pub fn into_option(self) -> Option<Self> {
+        match self {
+            Self::AbilityBase => None,
+            item => Some(item),
+        }
+    }
+}
