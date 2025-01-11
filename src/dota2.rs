@@ -62,6 +62,7 @@ pub mod lobby;
 pub mod r#match;
 pub mod mode;
 pub mod player;
+pub mod side;
 pub mod skill;
 
 pub use ability::Ability;
@@ -73,4 +74,5 @@ pub use lobby::Lobby;
 pub use mode::Mode;
 pub use player::Player;
 pub use r#match::{MatchId, MatchSeqNum, MatchesRequested, StartAt};
+pub use side::Side;
 pub use skill::Skill;
