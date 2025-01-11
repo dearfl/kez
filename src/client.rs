@@ -31,7 +31,8 @@ impl Client {
         Ok(Self { config, client })
     }
 
-    /// Create a new client from existing client and config in case you want to reuse client.
+    /// Create a new client from existing reqwest client and config in case
+    ///  you want to reuse client or have more control over requesting settings.
     /// # Example:
     /// ```rust,no_run
     /// use kez::Client;
