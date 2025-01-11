@@ -8,7 +8,7 @@ use crate::Transform;
 #[derive(Clone, Copy, Debug)]
 pub enum League {
     Unknown,
-    League(u64),
+    League(u32),
 }
 
 impl Default for League {
@@ -17,8 +17,8 @@ impl Default for League {
     }
 }
 
-impl From<u64> for League {
-    fn from(value: u64) -> Self {
+impl From<u32> for League {
+    fn from(value: u32) -> Self {
         match value {
             0 => Self::Unknown,
             id => Self::League(id),
@@ -26,7 +26,7 @@ impl From<u64> for League {
     }
 }
 
-impl From<League> for u64 {
+impl From<League> for u32 {
     fn from(value: League) -> Self {
         match value {
             League::Unknown => 0,
@@ -37,6 +37,6 @@ impl From<League> for u64 {
 
 impl Transform<League> for RequestBuilder {
     fn transform(self, value: League) -> Self {
-        self.query(&[("league_id", u64::from(value))])
+        self.query(&[("league_id", u32::from(value))])
     }
 }

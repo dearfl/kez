@@ -5,7 +5,6 @@ use crate::{dota2::define_dota2_enum, Transform};
 define_dota2_enum! {
     /// Skill level of match
     pub enum Skill : u8 {
-        Any = 0,
         Normal = 1,
         High = 2,
         VeryHigh = 3

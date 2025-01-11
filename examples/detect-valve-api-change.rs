@@ -3,8 +3,7 @@
 use clap::Parser;
 use kez::{
     dota2::{
-        get_match_history::MatchHistoryParameter,
-        get_match_history_by_seq_num::MatchHistoryBySeqNumParameter, r#match::MatchSeqNum, Hero,
+        get_match_history::MatchHistoryParameter, r#match::MatchSeqNum, Hero, Item, Lobby, Mode,
     },
     Client, Error,
 };
@@ -52,7 +51,8 @@ async fn main() -> anyhow::Result<()> {
         Err(Error::DecodeError(err, content)) => {
             anyhow::bail!("DecodeError: {err}\nContent: {content}");
         }
-        Err(_) => {
+        Err(err) => {
+            println!("Error: {}", err);
             // we don't care about other errors like reqwest error
         }
     }
@@ -61,24 +61,68 @@ async fn main() -> anyhow::Result<()> {
     let result = client
         .get_match_history(MatchHistoryParameter::default())
         .await;
-    let para = match result {
+    let start_seq_num = match result {
         Ok(history) => {
             let match_seq_num = history
                 .matches
                 .iter()
                 .fold(0, |init, mat| std::cmp::max(init, mat.match_seq_num));
-            MatchSeqNum::from(match_seq_num).into()
+            MatchSeqNum::from(match_seq_num)
         }
         Err(Error::DecodeError(err, content)) => {
             anyhow::bail!("DecodeError: {err}\nContent: {content}");
         }
-        Err(_) => MatchHistoryBySeqNumParameter::default(),
+        Err(err) => {
+            println!("Error: {}", err);
+            MatchSeqNum::default()
+        }
     };
 
-    // test get_match_history_by_seq_num
-    let result = client.get_match_history_by_seq_num(para).await;
-    if let Err(Error::DecodeError(err, content)) = result {
-        anyhow::bail!("DecodeError: {err}\nContent: {content}");
+    // test history & get_match_history_by_seq_num
+    let result = client.history(start_seq_num, 100).await;
+    match result {
+        Ok(matches) => {
+            for mat in matches {
+                if let Lobby::Unknown(id) = mat.lobby_type {
+                    anyhow::bail!("Unknown lobby_type: {}", id);
+                }
+                if let Mode::Unknown(id) = mat.mode {
+                    anyhow::bail!("Unknown game_mode: {}", id);
+                }
+
+                for player in mat.players {
+                    if let Hero::Unknown(id) = player.hero {
+                        if id != 0 {
+                            // sometimes we will get hero_id = 0
+                            anyhow::bail!("Unknown hero_id: {}", id);
+                        }
+                    }
+                    let items = vec![
+                        player.item_0,
+                        player.item_1,
+                        player.item_2,
+                        player.item_3,
+                        player.item_4,
+                        player.item_5,
+                        player.backpack_0,
+                        player.backpack_1,
+                        player.backpack_2,
+                        player.item_neutral,
+                    ];
+                    for item in items {
+                        if let Some(Item::Unknown(id)) = item {
+                            anyhow::bail!("Unknown item_id: {}", id);
+                        }
+                    }
+                }
+            }
+        }
+        Err(Error::DecodeError(err, content)) => {
+            anyhow::bail!("DecodeError: {err}\nContent: {content}");
+        }
+        Err(err) => {
+            println!("Error: {}", err);
+        }
     };
     Ok(())
 }
