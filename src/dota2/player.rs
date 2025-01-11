@@ -1,7 +1,7 @@
 use crate::dota2::{Account, Hero, Item};
 
 /// Converted Player type
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct Player {
     pub account: Account,
     // pub player_slot: u8,
