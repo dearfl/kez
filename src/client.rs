@@ -6,6 +6,7 @@ use crate::{
         get_heroes::{GetHeroesParameter, Heroes},
         get_match_history::{MatchHistory, MatchHistoryParameter},
         get_match_history_by_seq_num::{MatchHistoryBySeqNum, MatchHistoryBySeqNumParameter},
+        Match, MatchSeqNum,
     },
     Config, Error, Response, Result, Transform,
 };
@@ -84,6 +85,31 @@ impl Client {
         const URL: &str =
             "https://api.steampowered.com/IDOTA2Match_570/GetMatchHistoryBySequenceNum/v1";
         self.get(URL, para.into()).await
+    }
+
+    /// Request a sequence of matches by a start match sequence number and count.
+    /// The main difference between this method and Client::get_match_history_by_seq_num
+    /// is the return type, this method returns a Vec of Match(clearer type definition).
+    /// # Example:
+    /// ```rust,no_run
+    /// use kez::{dota2::MatchSeqNum, Client};
+    ///
+    /// #[tokio::main]
+    /// async fn main() -> anyhow::Result<()> {
+    ///   let client: Client = Client::new("MY_STEAM_API_KEY")?;
+    ///   // request 100 matches starting from match sequence number 0
+    ///   let matches = client.history(0, 100).await?;
+    ///   println!("{:?}", matches);
+    ///   Ok(())
+    /// }
+    /// ```
+    pub async fn history<P>(&self, start_seq_num: P, count: u8) -> Result<Vec<Match>>
+    where
+        P: Into<MatchSeqNum>,
+    {
+        let parameter = MatchHistoryBySeqNumParameter::new(start_seq_num.into(), count);
+        let history = self.get_match_history_by_seq_num(parameter).await?;
+        Ok(history.matches.into_iter().map(Into::into).collect())
     }
 
     /// Request some match history by applying some filters.
