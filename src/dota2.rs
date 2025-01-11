@@ -3,6 +3,50 @@
 // NOTE: I've intentionaly used narrower type for some field, for example u8 for hero id, while it really should be u32.
 // NOTE: Valve may change these types as dota2 update, any update will cause a BREAKING change for this crate.
 
+macro_rules! define_dota2_enum {
+    (
+        $(#[doc = $doc:expr])*
+        pub enum $name:ident : $base:ty {
+            $($item:ident = $value:literal),* $(,)?
+        }
+    ) => {
+        $(#[doc = $doc])*
+        #[non_exhaustive]
+        #[repr($base)]
+        #[derive(Clone, Copy, Debug)]
+        pub enum $name {
+            $($item = $value),*,
+            Unknown($base) = <$base>::MAX,
+        }
+
+        impl Default for $name {
+            fn default() -> Self {
+                Self::Unknown(<$base>::MIN)
+            }
+        }
+
+        impl From<$base> for $name {
+            fn from(value: $base) -> Self {
+                match value {
+                    $($value => Self::$item),*,
+                    unknown => Self::Unknown(unknown),
+                }
+            }
+        }
+
+        impl From<$name> for $base {
+            fn from(value: $name) -> Self {
+                match value {
+                    $($name::$item => $value),*,
+                    $name::Unknown(value) => value,
+                }
+            }
+        }
+    };
+}
+
+pub(crate) use define_dota2_enum;
+
 // pub modules for APIs
 pub mod get_heroes;
 pub mod get_match_history;
