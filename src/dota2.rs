@@ -9,6 +9,7 @@ pub mod get_match_history;
 pub mod get_match_history_by_seq_num;
 
 // common types related to dota2
+pub mod ability;
 pub mod account;
 pub mod hero;
 pub mod item;
@@ -18,6 +19,7 @@ pub mod r#match;
 pub mod mode;
 pub mod skill;
 
+pub use ability::Ability;
 pub use account::Account;
 pub use hero::Hero;
 pub use item::Item;
