@@ -73,6 +73,6 @@ pub use league::League;
 pub use lobby::Lobby;
 pub use mode::Mode;
 pub use player::Player;
-pub use r#match::{MatchId, MatchSeqNum, MatchesRequested, StartAt};
+pub use r#match::{Match, MatchId, MatchSeqNum, MatchesRequested, StartAt};
 pub use side::Side;
 pub use skill::Skill;
