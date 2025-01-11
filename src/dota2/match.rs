@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use reqwest::RequestBuilder;
 
 use crate::{
@@ -81,7 +83,7 @@ impl Transform<StartAt<MatchSeqNum>> for RequestBuilder {
 pub struct Match {
     pub players: Vec<Player>,
     pub winner: Side,
-    pub duration: u16,
+    pub duration: Duration,
     // pub pre_game_duration: u16,
     // pub start_time: u64,
     pub match_id: MatchId,
@@ -124,7 +126,7 @@ impl From<crate::dota2::get_match_history_by_seq_num::Match> for Match {
         Self {
             players: value.players.into_iter().map(Into::into).collect(),
             winner,
-            duration: value.duration,
+            duration: Duration::from_secs(value.duration.into()),
             match_id: value.match_id.into(),
             match_seq_num: value.match_seq_num.into(),
             lobby_type: value.lobby_type.into(),
