@@ -54,6 +54,9 @@ macro_rules! define_dota2_enum {
 pub(crate) use define_dota2_enum;
 
 // pub modules for APIs
+// These modules are public because we have conflict type name from this module.
+// The types inside these modules are raw types from web api. Most of these type
+// are integer types representing some enum.
 pub mod get_heroes;
 pub mod get_match_history;
 pub mod get_match_history_by_seq_num;
