@@ -1,4 +1,4 @@
-use std::time::Duration;
+use std::time::{Duration, SystemTime};
 
 use reqwest::RequestBuilder;
 
@@ -85,7 +85,7 @@ pub struct Match {
     pub winner: Side,
     pub duration: Duration,
     // pub pre_game_duration: u16,
-    // pub start_time: u64,
+    pub start_time: SystemTime,
     pub match_id: MatchId,
     pub match_seq_num: MatchSeqNum,
     // pub tower_status_radiant: u32,
@@ -95,7 +95,7 @@ pub struct Match {
     // pub cluster: u32,
     // pub first_blood_time: u16,
     pub lobby_type: Lobby,
-    // pub human_players: u8,
+    pub human_players: u8,
     pub league: League,
     pub mode: Mode,
     // pub flags: u8,
@@ -118,22 +118,24 @@ pub struct Match {
 }
 
 impl From<crate::dota2::get_match_history_by_seq_num::Match> for Match {
-    fn from(value: crate::dota2::get_match_history_by_seq_num::Match) -> Self {
-        let winner = match value.radiant_win {
+    fn from(mat: crate::dota2::get_match_history_by_seq_num::Match) -> Self {
+        let winner = match mat.radiant_win {
             true => Side::Radiant,
             false => Side::Dire,
         };
         Self {
-            players: value.players.into_iter().map(Into::into).collect(),
+            players: mat.players.into_iter().map(Into::into).collect(),
             winner,
-            duration: Duration::from_secs(value.duration.into()),
-            match_id: value.match_id.into(),
-            match_seq_num: value.match_seq_num.into(),
-            lobby_type: value.lobby_type.into(),
-            league: value.leagueid.into(),
-            mode: value.game_mode.into(),
-            radiant_score: value.radiant_score,
-            dire_score: value.dire_score,
+            start_time: SystemTime::UNIX_EPOCH + Duration::from_secs(mat.start_time),
+            duration: Duration::from_secs(mat.duration.into()),
+            match_id: mat.match_id.into(),
+            match_seq_num: mat.match_seq_num.into(),
+            lobby_type: mat.lobby_type.into(),
+            league: mat.leagueid.into(),
+            mode: mat.game_mode.into(),
+            radiant_score: mat.radiant_score,
+            dire_score: mat.dire_score,
+            human_players: mat.human_players,
         }
     }
 }

@@ -7,7 +7,10 @@ macro_rules! define_dota2_enum {
     (
         $(#[doc = $doc:expr])*
         pub enum $name:ident : $base:ty {
-            $($item:ident = $value:literal),* $(,)?
+            $(
+                $(#[doc = $idoc:expr])*
+                $item:ident = $value:literal
+            ),* $(,)?
         }
     ) => {
         $(#[doc = $doc])*
@@ -15,7 +18,10 @@ macro_rules! define_dota2_enum {
         #[repr($base)]
         #[derive(Clone, Copy, Debug)]
         pub enum $name {
-            $($item = $value),*,
+            $(
+                $(#[doc = $idoc])*
+                $item = $value
+            ),*,
             Unknown($base) = <$base>::MAX,
         }
 
@@ -64,8 +70,10 @@ pub mod mode;
 pub mod player;
 pub mod side;
 pub mod skill;
+pub mod status;
+pub mod unit;
 
-pub use ability::Ability;
+pub use ability::{Ability, AbilityUpgrade};
 pub use account::Account;
 pub use hero::Hero;
 pub use item::Item;
@@ -76,3 +84,5 @@ pub use player::Player;
 pub use r#match::{Match, MatchId, MatchSeqNum, MatchesRequested, StartAt};
 pub use side::Side;
 pub use skill::Skill;
+pub use status::LeaveStatus;
+pub use unit::Unit;

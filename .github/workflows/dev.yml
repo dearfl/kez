@@ -48,3 +48,7 @@ jobs:
 
     - name: Test
       run: cargo test --verbose
+
+    - name: API Check
+      run: cargo run --example detect-valve-api-change --features deny-unknown-fields -- ${{ secrets.DEV_STEAM_API_KEY }}
+

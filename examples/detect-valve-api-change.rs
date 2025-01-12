@@ -1,5 +1,6 @@
 /// This is an simple example used to check Valve API updates.
 /// The example will return a failure if any API is updated.
+/// The feature deny-unknown-fields must be enabled for this example to work.
 use clap::Parser;
 use kez::{
     dota2::{
@@ -91,7 +92,7 @@ async fn main() -> anyhow::Result<()> {
                 }
 
                 for player in mat.players {
-                    if let Hero::Unknown(id) = player.hero {
+                    if let Hero::Unknown(id) = player.hero.0 {
                         if id != 0 {
                             // sometimes we will get hero_id = 0
                             anyhow::bail!("Unknown hero_id: {}", id);
