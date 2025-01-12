@@ -3,9 +3,7 @@
 /// The feature deny-unknown-fields must be enabled for this example to work.
 use clap::Parser;
 use kez::{
-    dota2::{
-        get_match_history::MatchHistoryParameter, r#match::MatchSeqNum, Hero, Item, Lobby, Mode,
-    },
+    dota2::{get_match_history::MatchHistoryParameter, Hero, Item, Lobby, MatchSeqNum, Mode},
     Client, Error,
 };
 

@@ -59,20 +59,20 @@ pub mod get_match_history;
 pub mod get_match_history_by_seq_num;
 
 // common types related to dota2
-pub mod ability;
-pub mod account;
-pub mod draft;
-pub mod hero;
-pub mod item;
-pub mod league;
-pub mod lobby;
-pub mod r#match;
-pub mod mode;
-pub mod player;
-pub mod side;
-pub mod skill;
-pub mod status;
-pub mod unit;
+mod ability;
+mod account;
+mod draft;
+mod hero;
+mod item;
+mod league;
+mod lobby;
+mod r#match;
+mod mode;
+mod player;
+mod side;
+mod skill;
+mod status;
+mod unit;
 
 pub use ability::{Ability, AbilityUpgrade};
 pub use account::Account;
