@@ -65,7 +65,7 @@ pub mod player;
 pub mod side;
 pub mod skill;
 
-pub use ability::Ability;
+pub use ability::{Ability, AbilityUpgrade};
 pub use account::Account;
 pub use hero::Hero;
 pub use item::Item;

@@ -2870,3 +2870,24 @@ define_dota2_enum! {
         RoshanHalloweenBurn = 9999,
     }
 }
+
+/// represent a Ability upgrade.
+#[derive(Copy, Clone, Debug, Default)]
+pub struct AbilityUpgrade {
+    /// Hero level
+    pub level: u16,
+    /// seconds after the game starts
+    pub time: u16,
+    /// the upgraded ability
+    pub ability: Ability,
+}
+
+impl From<crate::dota2::get_match_history_by_seq_num::AbilityUpgrade> for AbilityUpgrade {
+    fn from(value: crate::dota2::get_match_history_by_seq_num::AbilityUpgrade) -> Self {
+        Self {
+            level: value.level,
+            time: value.time,
+            ability: value.ability.into(),
+        }
+    }
+}

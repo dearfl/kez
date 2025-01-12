@@ -1,4 +1,4 @@
-use crate::dota2::{Account, Hero, Item};
+use crate::dota2::{AbilityUpgrade, Account, Hero, Item};
 
 /// Converted Player type
 #[derive(Clone, Debug)]
@@ -40,7 +40,7 @@ pub struct Player {
     pub scaled_hero_damage: u32,
     pub scaled_tower_damage: u32,
     pub scaled_hero_healing: u32,
-    // pub ability_upgrades: Vec<AbilityUpgrade>,
+    pub ability_upgrades: Vec<AbilityUpgrade>,
     // pub additional_units: Vec<Unit>,
 }
 
@@ -81,6 +81,11 @@ impl From<crate::dota2::get_match_history_by_seq_num::Player> for Player {
             moonshard: player.moonshard != 0,
             gold_per_min: player.gold_per_min,
             xp_per_min: player.xp_per_min,
+            ability_upgrades: player
+                .ability_upgrades
+                .into_iter()
+                .map(Into::into)
+                .collect(),
         }
     }
 }
