@@ -61,6 +61,7 @@ pub mod get_match_history_by_seq_num;
 // common types related to dota2
 pub mod ability;
 pub mod account;
+pub mod draft;
 pub mod hero;
 pub mod item;
 pub mod league;
@@ -75,6 +76,7 @@ pub mod unit;
 
 pub use ability::{Ability, AbilityUpgrade};
 pub use account::Account;
+pub use draft::{Draft, DraftOp};
 pub use hero::Hero;
 pub use item::Item;
 pub use league::League;
