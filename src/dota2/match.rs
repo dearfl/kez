@@ -3,7 +3,7 @@ use std::time::{Duration, SystemTime};
 use reqwest::RequestBuilder;
 
 use crate::{
-    dota2::{Draft, League, Lobby, Mode, Player, Side},
+    dota2::{Draft, Engine, League, Lobby, Mode, Player, Side},
     Transform,
 };
 
@@ -99,7 +99,7 @@ pub struct Match {
     pub league: League,
     pub mode: Mode,
     // pub flags: u8,
-    // pub engine: u8,
+    pub engine: Engine,
     pub radiant_score: u16,
     pub dire_score: u16,
     // pub tournament_id: u64,
@@ -137,6 +137,7 @@ impl From<crate::dota2::get_match_history_by_seq_num::Match> for Match {
             dire_score: mat.dire_score,
             human_players: mat.human_players,
             drafts: mat.picks_bans.into_iter().map(Into::into).collect(),
+            engine: mat.engine.into(),
         }
     }
 }
