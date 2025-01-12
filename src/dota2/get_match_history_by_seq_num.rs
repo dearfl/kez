@@ -172,7 +172,7 @@ pub struct Player {
 
 #[derive(Deserialize, Serialize, Clone, Debug, Default)]
 #[cfg_attr(feature = "deny-unknown-fields", serde(deny_unknown_fields))]
-pub struct HeroSelection {
+pub struct Draft {
     pub is_pick: bool,
     pub hero_id: u8,
     pub team: u8,
@@ -228,7 +228,7 @@ pub struct Match {
     #[serde(default)]
     pub dire_captain: u64,
     #[serde(default)]
-    pub picks_bans: Vec<HeroSelection>,
+    pub picks_bans: Vec<Draft>,
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug, Default)]
