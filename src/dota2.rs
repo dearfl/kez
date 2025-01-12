@@ -7,7 +7,10 @@ macro_rules! define_dota2_enum {
     (
         $(#[doc = $doc:expr])*
         pub enum $name:ident : $base:ty {
-            $($item:ident = $value:literal),* $(,)?
+            $(
+                $(#[doc = $idoc:expr])*
+                $item:ident = $value:literal
+            ),* $(,)?
         }
     ) => {
         $(#[doc = $doc])*
@@ -15,7 +18,10 @@ macro_rules! define_dota2_enum {
         #[repr($base)]
         #[derive(Clone, Copy, Debug)]
         pub enum $name {
-            $($item = $value),*,
+            $(
+                $(#[doc = $idoc])*
+                $item = $value
+            ),*,
             Unknown($base) = <$base>::MAX,
         }
 
