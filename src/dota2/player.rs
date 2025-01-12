@@ -1,14 +1,15 @@
-use crate::dota2::{AbilityUpgrade, Account, Hero, Item, LeaveStatus, Unit};
+use crate::dota2::{AbilityUpgrade, Account, Hero, Item, LeaveStatus, Side, Unit};
 
 /// Converted Player type
 #[derive(Clone, Debug)]
 pub struct Player {
     pub account: Account,
-    // pub player_slot: u8,
+    /// side and position of this player
+    pub slot: (Side, u8),
     pub team_number: u8,
     pub team_slot: u8,
-    pub hero: Hero,
-    // pub hero_variant: u8,
+    /// hero and variant(facet?) of hero
+    pub hero: (Hero, u8),
     pub item_0: Option<Item>,
     pub item_1: Option<Item>,
     pub item_2: Option<Item>,
@@ -48,7 +49,8 @@ impl From<crate::dota2::get_match_history_by_seq_num::Player> for Player {
     fn from(player: crate::dota2::get_match_history_by_seq_num::Player) -> Self {
         Self {
             account: player.account_id.into(),
-            hero: player.hero_id.into(),
+            hero: (player.hero_id.into(), player.hero_variant),
+            slot: (player.player_slot.into(), player.player_slot & 0x7F),
             item_0: Item::from(player.item_0).into_option(),
             item_1: Item::from(player.item_1).into_option(),
             item_2: Item::from(player.item_2).into_option(),
