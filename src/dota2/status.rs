@@ -17,3 +17,13 @@ define_dota2_enum! {
         NeverConnectedTooLong = 6,
     }
 }
+
+impl LeaveStatus {
+    pub fn into_option(self) -> Option<Self> {
+        match self {
+            // 0 is normal
+            LeaveStatus::Unknown(0) => None,
+            status => Some(status),
+        }
+    }
+}

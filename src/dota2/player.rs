@@ -23,7 +23,7 @@ pub struct Player {
     pub kills: u8,
     pub deaths: u8,
     pub assists: u8,
-    pub leave_status: LeaveStatus,
+    pub leave_status: Option<LeaveStatus>,
     pub last_hits: u16,
     pub denies: u16,
     pub level: u8,
@@ -93,7 +93,7 @@ impl From<crate::dota2::get_match_history_by_seq_num::Player> for Player {
                 .into_iter()
                 .map(Into::into)
                 .collect(),
-            leave_status: player.leaver_status.into(),
+            leave_status: LeaveStatus::from(player.leaver_status).into_option(),
         }
     }
 }
