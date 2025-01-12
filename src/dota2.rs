@@ -64,6 +64,7 @@ pub mod mode;
 pub mod player;
 pub mod side;
 pub mod skill;
+pub mod unit;
 
 pub use ability::{Ability, AbilityUpgrade};
 pub use account::Account;
@@ -76,3 +77,4 @@ pub use player::Player;
 pub use r#match::{Match, MatchId, MatchSeqNum, MatchesRequested, StartAt};
 pub use side::Side;
 pub use skill::Skill;
+pub use unit::Unit;
