@@ -54,27 +54,34 @@ macro_rules! define_dota2_enum {
 pub(crate) use define_dota2_enum;
 
 // pub modules for APIs
+// These modules are public because we have conflict type name from this module.
+// The types inside these modules are raw types from web api. Most of these type
+// are integer types representing some enum.
 pub mod get_heroes;
 pub mod get_match_history;
 pub mod get_match_history_by_seq_num;
 
 // common types related to dota2
-pub mod ability;
-pub mod account;
-pub mod hero;
-pub mod item;
-pub mod league;
-pub mod lobby;
-pub mod r#match;
-pub mod mode;
-pub mod player;
-pub mod side;
-pub mod skill;
-pub mod status;
-pub mod unit;
+mod ability;
+mod account;
+mod draft;
+mod engine;
+mod hero;
+mod item;
+mod league;
+mod lobby;
+mod r#match;
+mod mode;
+mod player;
+mod side;
+mod skill;
+mod status;
+mod unit;
 
 pub use ability::{Ability, AbilityUpgrade};
 pub use account::Account;
+pub use draft::{Draft, DraftOp};
+pub use engine::Engine;
 pub use hero::Hero;
 pub use item::Item;
 pub use league::League;
@@ -84,5 +91,5 @@ pub use player::Player;
 pub use r#match::{Match, MatchId, MatchSeqNum, MatchesRequested, StartAt};
 pub use side::Side;
 pub use skill::Skill;
-pub use status::LeaveStatus;
+pub use status::{BarracksStatus, BuildingStatus, LeaveStatus, TowerStatus};
 pub use unit::Unit;
