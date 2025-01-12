@@ -1,4 +1,4 @@
-use crate::dota2::{AbilityUpgrade, Account, Hero, Item, Unit};
+use crate::dota2::{AbilityUpgrade, Account, Hero, Item, LeaveStatus, Unit};
 
 /// Converted Player type
 #[derive(Clone, Debug)]
@@ -22,7 +22,7 @@ pub struct Player {
     pub kills: u8,
     pub deaths: u8,
     pub assists: u8,
-    // pub leaver_status: u8,
+    pub leave_status: LeaveStatus,
     pub last_hits: u16,
     pub denies: u16,
     pub level: u8,
@@ -91,6 +91,7 @@ impl From<crate::dota2::get_match_history_by_seq_num::Player> for Player {
                 .into_iter()
                 .map(Into::into)
                 .collect(),
+            leave_status: player.leaver_status.into(),
         }
     }
 }
