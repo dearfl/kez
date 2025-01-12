@@ -3,7 +3,10 @@
 /// The feature deny-unknown-fields must be enabled for this example to work.
 use clap::Parser;
 use kez::{
-    dota2::{get_match_history::MatchHistoryParameter, Hero, Item, Lobby, MatchSeqNum, Mode},
+    dota2::{
+        get_match_history::MatchHistoryParameter, Ability, Engine, Hero, Item, LeaveStatus, Lobby,
+        MatchSeqNum, Mode,
+    },
     Client, Error,
 };
 
@@ -82,13 +85,6 @@ async fn main() -> anyhow::Result<()> {
     match result {
         Ok(matches) => {
             for mat in matches {
-                if let Lobby::Unknown(id) = mat.lobby_type {
-                    anyhow::bail!("Unknown lobby_type: {}", id);
-                }
-                if let Mode::Unknown(id) = mat.mode {
-                    anyhow::bail!("Unknown game_mode: {}", id);
-                }
-
                 for player in mat.players {
                     if let Hero::Unknown(id) = player.hero.0 {
                         if id != 0 {
@@ -113,6 +109,27 @@ async fn main() -> anyhow::Result<()> {
                             anyhow::bail!("Unknown item_id: {}", id);
                         }
                     }
+                    for upgrade in player.ability_upgrades {
+                        if let Ability::Unknown(id) = upgrade.ability {
+                            // there are always some ability constant we do not yet know?
+                            // so we don't return an error here.
+                            println!("Unknown ability id: {}, try checking https://opendota.com/matches/{}", id, u64::from(mat.match_id));
+                        }
+                    }
+
+                    if let Some(LeaveStatus::Unknown(id)) = player.leave_status {
+                        anyhow::bail!("Unknown leave_status: {}", id);
+                    }
+                }
+
+                if let Lobby::Unknown(id) = mat.lobby_type {
+                    anyhow::bail!("Unknown lobby_type: {}", id);
+                }
+                if let Mode::Unknown(id) = mat.mode {
+                    anyhow::bail!("Unknown game_mode: {}", id);
+                }
+                if let Engine::Unknown(id) = mat.engine {
+                    anyhow::bail!("Unknown engine: {}", id);
                 }
             }
         }
@@ -123,5 +140,6 @@ async fn main() -> anyhow::Result<()> {
             println!("Error: {}", err);
         }
     };
+
     Ok(())
 }
