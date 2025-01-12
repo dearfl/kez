@@ -6,6 +6,9 @@ pub enum DraftOp {
     Ban,
 }
 
+/// Draft is the process of selecting heroes for a match.
+/// Different game mode have different drafting process,
+/// but each draft is either a pick or a ban of some specific hero.
 #[derive(Clone, Debug)]
 pub struct Draft {
     pub op: DraftOp,
