@@ -91,5 +91,5 @@ pub use player::Player;
 pub use r#match::{Match, MatchId, MatchSeqNum, MatchesRequested, StartAt};
 pub use side::Side;
 pub use skill::Skill;
-pub use status::LeaveStatus;
+pub use status::{BarracksStatus, BuildingStatus, LeaveStatus, TowerStatus};
 pub use unit::Unit;

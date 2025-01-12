@@ -3,7 +3,7 @@ use std::time::{Duration, SystemTime};
 use reqwest::RequestBuilder;
 
 use crate::{
-    dota2::{Draft, Engine, League, Lobby, Mode, Player, Side},
+    dota2::{BarracksStatus, Draft, Engine, League, Lobby, Mode, Player, Side, TowerStatus},
     Transform,
 };
 
@@ -88,10 +88,10 @@ pub struct Match {
     pub start_time: SystemTime,
     pub match_id: MatchId,
     pub match_seq_num: MatchSeqNum,
-    // pub tower_status_radiant: u32,
-    // pub tower_status_dire: u32,
-    // pub barracks_status_radiant: u32,
-    // pub barracks_status_dire: u32,
+    pub tower_status_radiant: TowerStatus,
+    pub tower_status_dire: TowerStatus,
+    pub barracks_status_radiant: BarracksStatus,
+    pub barracks_status_dire: BarracksStatus,
     pub cluster: u32,
     pub first_blood_time: u16,
     pub lobby_type: Lobby,
@@ -154,6 +154,10 @@ impl From<crate::dota2::get_match_history_by_seq_num::Match> for Match {
             dire_team_complete: mat.dire_team_complete,
             radiant_captain: mat.radiant_captain,
             dire_captain: mat.dire_captain,
+            tower_status_radiant: mat.tower_status_radiant.into(),
+            tower_status_dire: mat.tower_status_dire.into(),
+            barracks_status_radiant: mat.barracks_status_radiant.into(),
+            barracks_status_dire: mat.barracks_status_dire.into(),
         }
     }
 }
