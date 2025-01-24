@@ -28,13 +28,13 @@ impl LeaveStatus {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum BuildingStatus {
     Destroyed,
     Stand,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct TowerStatus {
     pub ancient_bottom: BuildingStatus,
     pub ancient_top: BuildingStatus,
@@ -71,7 +71,7 @@ impl From<u32> for TowerStatus {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct BarracksStatus {
     pub bottom_ranged: BuildingStatus,
     pub bottom_melee: BuildingStatus,
