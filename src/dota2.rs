@@ -16,7 +16,7 @@ macro_rules! define_dota2_enum {
         $(#[doc = $doc])*
         #[non_exhaustive]
         #[repr($base)]
-        #[derive(Clone, Copy, Debug)]
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
         pub enum $name {
             $(
                 $(#[doc = $idoc])*

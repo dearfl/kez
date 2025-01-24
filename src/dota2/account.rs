@@ -5,7 +5,7 @@ use crate::Transform;
 /// User account repr
 #[non_exhaustive]
 #[repr(u8)]
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum Account {
     /// I'm actually not sure 0 => Bot
     Bot,

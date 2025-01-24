@@ -2901,7 +2901,7 @@ define_dota2_enum! {
 }
 
 /// represent a Ability upgrade.
-#[derive(Copy, Clone, Debug, Default)]
+#[derive(Copy, Clone, Debug, Default, PartialEq, Eq, Hash)]
 pub struct AbilityUpgrade {
     /// Hero level
     pub level: u16,

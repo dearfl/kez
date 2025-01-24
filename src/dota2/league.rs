@@ -5,7 +5,7 @@ use crate::Transform;
 /// League repr
 #[non_exhaustive]
 #[repr(u8)]
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum League {
     Unknown,
     League(u32),
