@@ -82,7 +82,7 @@ pub use ability::{Ability, AbilityUpgrade};
 pub use account::Account;
 pub use draft::{Draft, DraftOp};
 pub use engine::Engine;
-pub use hero::Hero;
+pub use hero::HeroId;
 pub use item::Item;
 pub use league::League;
 pub use lobby::Lobby;

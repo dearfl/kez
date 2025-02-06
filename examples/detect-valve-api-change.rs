@@ -4,8 +4,8 @@
 use clap::Parser;
 use kez::{
     dota2::{
-        get_match_history::MatchHistoryParameter, Ability, Engine, Hero, Item, LeaveStatus, Lobby,
-        MatchSeqNum, Mode,
+        get_match_history::MatchHistoryParameter, Ability, Engine, HeroId, Item, LeaveStatus,
+        Lobby, MatchSeqNum, Mode,
     },
     Client, Error,
 };
@@ -31,15 +31,15 @@ async fn main() -> anyhow::Result<()> {
                     "Some new heroes have been added to dota2. We need to update this crate."
                 );
             }
-            let heroes: Vec<Hero> = heroes
+            let heroes: Vec<HeroId> = heroes
                 .heroes
                 .iter()
-                .map(|hero| Hero::from(hero.id))
+                .map(|hero| HeroId::from(hero.id))
                 .collect();
             let unknown: Vec<_> = heroes
                 .iter()
                 .filter_map(|&hero| match hero {
-                    Hero::Unknown(id) => Some(id),
+                    HeroId::Unknown(id) => Some(id),
                     _ => None,
                 })
                 .collect();
@@ -86,7 +86,7 @@ async fn main() -> anyhow::Result<()> {
         Ok(matches) => {
             for mat in matches {
                 for player in mat.players {
-                    if let Hero::Unknown(id) = player.hero.0 {
+                    if let HeroId::Unknown(id) = player.hero.0 {
                         if id != 0 {
                             // sometimes we will get hero_id = 0
                             anyhow::bail!("Unknown hero_id: {}", id);

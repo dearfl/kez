@@ -1,4 +1,4 @@
-use crate::dota2::{AbilityUpgrade, Account, Hero, Item, LeaveStatus, Side, Unit};
+use crate::dota2::{AbilityUpgrade, Account, HeroId, Item, LeaveStatus, Side, Unit};
 
 /// Converted Player type
 #[derive(Clone, Debug)]
@@ -9,7 +9,7 @@ pub struct Player {
     pub team_number: u8,
     pub team_slot: u8,
     /// hero and variant(facet?) of hero
-    pub hero: (Hero, u8),
+    pub hero: (HeroId, u8),
     pub item_0: Option<Item>,
     pub item_1: Option<Item>,
     pub item_2: Option<Item>,

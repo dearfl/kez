@@ -6,17 +6,17 @@ define_dota2_enum! {
     /// Available heros in current dota2
     /// # Example
     /// ```rust,no_run
-    /// use kez::{dota2::{Hero, get_heroes::Heroes}, Client};
+    /// use kez::{dota2::{HeroId, get_heroes::Heroes}, Client};
     /// #[tokio::main]
     /// async fn main() -> anyhow::Result<()> {
     ///   let client = Client::new("DUMMY_STEAM_API_KEY")?;
     ///   let heroes = client.get_heroes(()).await?;
-    ///   let heroes: Vec<Hero> = heroes.heroes.iter().map(|hero| Hero::from(hero.id)).collect();
+    ///   let heroes: Vec<HeroId> = heroes.heroes.iter().map(|hero| HeroId::from(hero.id)).collect();
     ///   println!("{:?}", heroes);
     ///   Ok(())
     /// }
     /// ```
-    pub enum Hero: u8 {
+    pub enum HeroId: u8 {
         AntiMage = 1,
         Axe = 2,
         Bane = 3,
@@ -146,8 +146,8 @@ define_dota2_enum! {
     }
 }
 
-impl Transform<Hero> for RequestBuilder {
-    fn transform(self, value: Hero) -> Self {
+impl Transform<HeroId> for RequestBuilder {
+    fn transform(self, value: HeroId) -> Self {
         self.query(&[("hero_id", u8::from(value))])
     }
 }

@@ -1,4 +1,4 @@
-use crate::dota2::Hero;
+use crate::dota2::HeroId;
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum DraftOp {
@@ -12,7 +12,7 @@ pub enum DraftOp {
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct Draft {
     pub op: DraftOp,
-    pub hero: Hero,
+    pub hero: HeroId,
     pub team: u8,
     pub order: u8,
 }
