@@ -16,7 +16,7 @@ pub struct Args {
 }
 
 fn check_hero(hero: Hero) -> Option<(u8, u8)> {
-    use kez::dota2::*;
+    use kez::dota2::hero::*;
     let raw = hero.into();
     match hero {
         Hero::Unknown((id, _)) if id != 0 => Some(raw),
