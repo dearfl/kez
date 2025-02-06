@@ -118,13 +118,13 @@ impl Client {
     /// ```rust,no_run
     /// use kez::Client;
     /// use kez::dota2::get_match_history::MatchHistoryParameter;
-    /// use kez::dota2::Hero;
+    /// use kez::dota2::HeroId;
     ///
     /// #[tokio::main]
     /// async fn main() -> anyhow::Result<()> {
     ///   let client: Client = Client::new("MY_STEAM_API_KEY").expect("Failed to create client");
     ///   // request 100 matches contains hero Kez starting from match id 0
-    ///   let filter = MatchHistoryParameter::new().with_hero(Hero::Kez).with_matches_requested(100);
+    ///   let filter = MatchHistoryParameter::new().with_hero(HeroId::Kez).with_matches_requested(100);
     ///   let result = client.get_match_history(filter).await?;
     ///   println!("{:?}", result);
     ///   Ok(())

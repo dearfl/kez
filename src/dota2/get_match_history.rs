@@ -2,7 +2,7 @@ use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    dota2::{Account, Hero, League, MatchId, MatchesRequested, Mode, Skill, StartAt},
+    dota2::{Account, HeroId, League, MatchId, MatchesRequested, Mode, Skill, StartAt},
     Transform,
 };
 
@@ -68,14 +68,14 @@ impl Transform<TournamentGamesOnly> for RequestBuilder {
 /// # Example
 /// ```rust,no_run
 /// use kez::dota2::get_match_history::MatchHistoryParameter;
-/// use kez::dota2::Hero;
+/// use kez::dota2::HeroId;
 /// let parameter = MatchHistoryParameter::new()
-///                     .with_hero(Hero::Kez) // search for matches contains Kez
+///                     .with_hero(HeroId::Kez) // search for matches contains Kez
 ///                     .with_min_players(10); // at least 10 human players
 /// ```
 #[derive(Copy, Clone, Debug, Default)]
 pub struct MatchHistoryParameter {
-    pub hero: Option<Hero>,
+    pub hero: Option<HeroId>,
     pub mode: Option<Mode>,
     pub skill: Option<Skill>,
     pub min_players: Option<MinPlayers>,
@@ -105,7 +105,7 @@ impl MatchHistoryParameter {
         Self::default()
     }
 
-    pub fn with_hero(mut self, hero: Hero) -> Self {
+    pub fn with_hero(mut self, hero: HeroId) -> Self {
         self.hero = Some(hero);
         self
     }
