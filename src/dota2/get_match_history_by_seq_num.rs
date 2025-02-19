@@ -109,6 +109,7 @@ pub struct Unit {
     pub backpack_1: u16,
     pub backpack_2: u16,
     pub item_neutral: u16,
+    pub item_neutral2: u16,
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug, Default)]
@@ -131,6 +132,7 @@ pub struct Player {
     pub backpack_1: u16,
     pub backpack_2: u16,
     pub item_neutral: u16,
+    pub item_neutral2: u16,
     pub kills: u8,
     pub deaths: u8,
     pub assists: u8,
