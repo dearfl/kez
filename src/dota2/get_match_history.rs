@@ -2,8 +2,8 @@ use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    dota2::{Account, HeroId, League, MatchId, MatchesRequested, Mode, Skill, StartAt},
     Transform,
+    dota2::{Account, HeroId, League, MatchId, MatchesRequested, Mode, Skill, StartAt},
 };
 
 /// filter for matches with at least N human players.

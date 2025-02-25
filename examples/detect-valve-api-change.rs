@@ -3,11 +3,11 @@
 /// The feature deny-unknown-fields must be enabled for this example to work.
 use clap::Parser;
 use kez::{
-    dota2::{
-        get_match_history::MatchHistoryParameter, Ability, Engine, Hero, HeroId, Item, LeaveStatus,
-        Lobby, MatchSeqNum, Mode,
-    },
     Client, Error,
+    dota2::{
+        Ability, Engine, Hero, HeroId, Item, LeaveStatus, Lobby, MatchSeqNum, Mode,
+        get_match_history::MatchHistoryParameter,
+    },
 };
 
 #[derive(Parser)]
@@ -262,7 +262,11 @@ async fn main() -> anyhow::Result<()> {
                         if let Ability::Unknown(id) = upgrade.ability {
                             // there are always some ability constant we do not yet know?
                             // so we don't return an error here.
-                            println!("Unknown ability id: {}, try checking https://opendota.com/matches/{}", id, u64::from(mat.match_id));
+                            println!(
+                                "Unknown ability id: {}, try checking https://opendota.com/matches/{}",
+                                id,
+                                u64::from(mat.match_id)
+                            );
                         }
                     }
 
