@@ -1,6 +1,6 @@
 use reqwest::RequestBuilder;
 
-use crate::{dota2::define_dota2_enum, Transform};
+use crate::{Transform, dota2::define_dota2_enum};
 
 define_dota2_enum! {
     /// Game Mode enum
