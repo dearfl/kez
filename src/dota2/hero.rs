@@ -2,6 +2,13 @@ use reqwest::RequestBuilder;
 
 use crate::{Transform, dota2::define_dota2_enum};
 
+impl Transform<HeroId> for RequestBuilder {
+    fn transform(self, value: HeroId) -> Self {
+        self.query(&[("hero_id", u8::from(value))])
+    }
+}
+
+// TODO: maybe use another macro for heroes definitions
 define_dota2_enum! {
     /// Available heros in current dota2
     /// # Example
@@ -146,13 +153,6 @@ define_dota2_enum! {
     }
 }
 
-impl Transform<HeroId> for RequestBuilder {
-    fn transform(self, value: HeroId) -> Self {
-        self.query(&[("hero_id", u8::from(value))])
-    }
-}
-
-// TODO: maybe use another macro for heroes definitions
 define_dota2_enum! {
     pub enum AntimageFacet : u8 {
         MagebanesMirror = 1,
@@ -185,6 +185,8 @@ define_dota2_enum! {
     pub enum CrystalMaidenFacet : u8 {
         FrozenExpanse = 1,
         ColdComfort = 2,
+        GlacialGuard = 3,
+        ArcaneOverflow = 4,
     }
 }
 
@@ -213,6 +215,8 @@ define_dota2_enum! {
     pub enum MiranaFacet : u8 {
         Moonlight = 1,
         Sunlight = 2,
+        Starstruck = 3,
+        LeapsAndBounds = 4,
     }
 }
 
@@ -234,6 +238,7 @@ define_dota2_enum! {
     pub enum PhantomLancerFacet : u8 {
         Convergence = 1,
         Divergence = 2,
+        Lancelot = 3,
     }
 }
 
@@ -248,6 +253,7 @@ define_dota2_enum! {
     pub enum PudgeFacet : u8 {
         FreshMeat = 1,
         FlayersHook = 2,
+        RottenCore = 3,
     }
 }
 
@@ -295,8 +301,11 @@ define_dota2_enum! {
 
 define_dota2_enum! {
     pub enum WindrunnerFacet : u8 {
+        Tailwind = 1,
         Focusfire = 2,
         Whirlwind = 3,
+        Tangled = 4,
+        Killshot = 5,
     }
 }
 
@@ -331,7 +340,8 @@ define_dota2_enum! {
 define_dota2_enum! {
     pub enum ShadowShamanFacet : u8 {
         ClusterCluck = 1,
-        MassiveSerpentWard = 2,
+        VoodooHands = 2,
+        MassiveSerpentWard = 3,
     }
 }
 
@@ -417,6 +427,7 @@ define_dota2_enum! {
     pub enum QueenofpainFacet : u8 {
         Lifesteal = 1,
         Selfdmg = 2,
+        FacetBondage = 3,
     }
 }
 
@@ -429,6 +440,7 @@ define_dota2_enum! {
 
 define_dota2_enum! {
     pub enum FacelessVoidFacet : u8 {
+        TemporalImpunity = 1,
         Chronosphere = 2,
         TimeZone = 3,
     }
@@ -453,6 +465,7 @@ define_dota2_enum! {
     pub enum PhantomAssassinFacet : u8 {
         VeiledOne = 1,
         Methodical = 2,
+        SweetRelease = 3,
     }
 }
 
@@ -467,6 +480,7 @@ define_dota2_enum! {
     pub enum TemplarAssassinFacet : u8 {
         Voidblades = 1,
         Refractor = 2,
+        HiddenReach = 3,
     }
 }
 
@@ -479,6 +493,7 @@ define_dota2_enum! {
 
 define_dota2_enum! {
     pub enum LunaFacet : u8 {
+        LunarOrbit = 1,
         Moonshield = 2,
         Moonstorm = 3,
     }
@@ -522,8 +537,11 @@ define_dota2_enum! {
 
 define_dota2_enum! {
     pub enum LifeStealerFacet : u8 {
+        MaxhpGain = 1,
         Rage = 2,
         RageDispell = 3,
+        Fleshfeast = 4,
+        Gorestorm = 5,
     }
 }
 
@@ -559,7 +577,8 @@ define_dota2_enum! {
     pub enum HuskarFacet : u8 {
         Bloodbath = 1,
         NothlTransfusion = 2,
-        NothlConflagration = 3,
+        Cauterize = 3,
+        NothlConflagration = 4,
     }
 }
 
@@ -567,6 +586,7 @@ define_dota2_enum! {
     pub enum NightStalkerFacet : u8 {
         BlindingVoid = 1,
         Dayswap = 2,
+        Voidbringer = 3,
     }
 }
 
@@ -595,6 +615,8 @@ define_dota2_enum! {
     pub enum JakiroFacet : u8 {
         Fire = 1,
         Ice = 2,
+        TwinTerror = 3,
+        IceBreaker = 4,
     }
 }
 
@@ -612,6 +634,7 @@ define_dota2_enum! {
         HellbearConvert = 3,
         TrollConvert = 4,
         SatyrConvert = 5,
+        FrogConvert = 6,
     }
 }
 
@@ -648,6 +671,7 @@ define_dota2_enum! {
     pub enum SpiritBreakerFacet : u8 {
         BullRush = 1,
         Imbalanced = 2,
+        BullsHit = 3,
     }
 }
 
@@ -662,6 +686,7 @@ define_dota2_enum! {
     pub enum AlchemistFacet : u8 {
         SeedMoney = 1,
         Mixologist = 2,
+        Dividends = 3,
     }
 }
 
@@ -669,6 +694,9 @@ define_dota2_enum! {
     pub enum InvokerFacet : u8 {
         Agnostic = 1,
         Elitist = 2,
+        QuasFocus = 3,
+        WexFocus = 4,
+        ExortFocus = 5,
     }
 }
 
@@ -720,13 +748,16 @@ define_dota2_enum! {
     pub enum ChaosKnightFacet : u8 {
         StrongIllusions = 1,
         Irrationality = 2,
+        FacetFundamentalForging = 3,
+        ClovenChaos = 4,
     }
 }
 
 define_dota2_enum! {
     pub enum MeepoFacet : u8 {
         MoreMeepo = 1,
-        PackRat = 2,
+        Codependent = 2,
+        PackRat = 3,
     }
 }
 
@@ -811,7 +842,9 @@ define_dota2_enum! {
 define_dota2_enum! {
     pub enum MedusaFacet : u8 {
         Engorged = 1,
+        ManaPact = 2,
         SlowAttacks = 3,
+        Undulation = 4,
     }
 }
 
@@ -831,8 +864,11 @@ define_dota2_enum! {
 
 define_dota2_enum! {
     pub enum MagnataurFacet : u8 {
+        RunThrough = 1,
         ReversePolarity = 2,
-        ReverseReversePolarity = 3,
+        EternalEmpowerment = 3,
+        DiminishingReturn = 4,
+        ReverseReversePolarity = 5,
     }
 }
 
@@ -941,6 +977,8 @@ define_dota2_enum! {
     pub enum WinterWyvernFacet : u8 {
         HealMana = 1,
         AtkRange = 2,
+        Winterproof = 3,
+        Recursive = 4,
     }
 }
 
@@ -948,6 +986,8 @@ define_dota2_enum! {
     pub enum ArcWardenFacet : u8 {
         Order = 1,
         Disorder = 2,
+        RunedReplica = 3,
+        PowerCapture = 4,
     }
 }
 
@@ -962,6 +1002,7 @@ define_dota2_enum! {
     pub enum DarkWillowFacet : u8 {
         ThrowingShade = 1,
         ThornyThicket = 2,
+        ShatteringCrown = 3,
     }
 }
 
@@ -983,12 +1024,14 @@ define_dota2_enum! {
     pub enum HoodwinkFacet : u8 {
         Hunter = 1,
         TreebounceTrickshot = 2,
+        Hipshot = 3,
     }
 }
 
 define_dota2_enum! {
     pub enum VoidSpiritFacet : u8 {
         Sanctuary = 1,
+        PhysBarrier = 2,
         AetherArtifice = 3,
     }
 }
@@ -1010,6 +1053,8 @@ define_dota2_enum! {
 define_dota2_enum! {
     pub enum RingmasterFacet : u8 {
         Default = 1,
+        CarnyClassics = 2,
+        SideshowSecrets = 3,
     }
 }
 
@@ -1017,6 +1062,8 @@ define_dota2_enum! {
     pub enum DawnbreakerFacet : u8 {
         SolarCharged = 1,
         GleamingHammer = 2,
+        Blaze = 3,
+        Hearthfire = 4,
     }
 }
 
@@ -1024,13 +1071,17 @@ define_dota2_enum! {
     pub enum MarciFacet : u8 {
         Sidekick = 1,
         Bodyguard = 2,
+        BuddySystem = 3,
+        Pickmeup = 4,
+        FleetingFury = 5,
     }
 }
 
 define_dota2_enum! {
     pub enum PrimalBeastFacet : u8 {
         RompNStomp = 1,
-        Ferocity = 2,
+        ProvokeTheBeast = 2,
+        Ferocity = 3,
     }
 }
 
@@ -1043,7 +1094,8 @@ define_dota2_enum! {
 
 define_dota2_enum! {
     pub enum KezFacet : u8 {
-        Default = 1,
+        Flutter = 1,
+        Shadowhawk = 2,
     }
 }
 
