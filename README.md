@@ -1,20 +1,28 @@
 # Kez
 
-Kez is a rust crate for valve's dota2 web api. The name is the newest hero added to dota2 as of the time this crate is created(2025/01/09).
+[![crates.io](https://img.shields.io/crates/v/kez)](https://crates.io/crates/kez)
+[![docs.rs](https://img.shields.io/docsrs/kez)](https://docs.rs/kez)
+
+A Rust crate for interacting with Valve's Dota 2 Web API. Named after the newest hero added to Dota 2 as of this crate's creation date (2025-01-09).
 
 ## Motivation
 
-As of 2025/01/09, there are two rust crate for the same functionality, namely `dota2_api` and `dota2_webapi_bindings`, however they are both outdated. In my attempt to write a dota2 match finder in rust, I have to manually write these equivelent code, so I decided to extract those code into a separate crate.
+Existing Rust crates like `dota2_api` and `dota2_webapi_bindings` are no longer active maintained and lack support for newer API features. While building a Dota 2 match finder, I needed an API they didn't provide, so I created Kez.
 
 ## Supported APIs
 
- - get_match_history_by_seq_num: this is the primary APIs used by varies dota2 data websites now, you can requests at most 100 matches with this APIs in one request, and it gives back the most detailed match information like get_match_detail(this is not working right now).
- - get_match_history: this is the API for you if you want to find some specific matches, for example with specific hero or player. However this API is very hard to use IMO.
- - get_heroes: request a list of current available heroes.
+ - get_match_history_by_seq_num: Fetch up to 100 sequential matches. Ideal for bulk data collection.
+ - get_match_history: Search for matches by player, hero, or other criteria (limited filtering support).
+ - get_heroes: Retrieve metadata for all heroes.
+ - history: This is a thin wrapper around get_match_history_by_seq_num, which returns a list of Matches with more detailed information.
 
  ## TODOs
 
-  - [ ] add more dota2 related types, LobbyType/GameMode/Item/...
+  - [X] add more dota2 related types, LobbyType/GameMode/Item/...
   - [ ] add more APIs? GetTopLiveGame?
-  - [ ] add more comments about varies fields of response
+  - [ ] add more documents and comments about varies fields of response
   - [ ] other things...
+
+## Disclaim
+
+Don't use this crate for anything serious, it is fundamentally unstable since every game update could potentially break this crate.
