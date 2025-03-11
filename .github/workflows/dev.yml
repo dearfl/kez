@@ -53,3 +53,11 @@ jobs:
       if: github.actor != 'dependabot[bot]'
       run: cargo run --example detect-valve-api-change --features deny-unknown-fields -- ${{ secrets.DEV_STEAM_API_KEY }}
 
+  nix-build:
+    name: Nix Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: cachix/install-nix-action@v26
+      - name: Building package
+        run: nix build 
