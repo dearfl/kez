@@ -2,13 +2,13 @@ use reqwest::{IntoUrl, RequestBuilder, StatusCode};
 use serde::Deserialize;
 
 use crate::{
-    Config, Error, Response, Result, Transform,
     dota2::{
-        Match, MatchSeqNum,
         get_heroes::{GetHeroesParameter, Heroes},
         get_match_history::{MatchHistory, MatchHistoryParameter},
         get_match_history_by_seq_num::{MatchHistoryBySeqNum, MatchHistoryBySeqNumParameter},
+        Match, MatchSeqNum,
     },
+    Config, Error, Response, Result, Transform,
 };
 
 /// Client is what used to request an API.
