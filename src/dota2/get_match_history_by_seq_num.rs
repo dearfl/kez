@@ -2,8 +2,8 @@ use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    Transform,
     dota2::{MatchSeqNum, MatchesRequested, StartAt},
+    Transform,
 };
 
 /// These are parameters to API get_match_history_by_seq_num

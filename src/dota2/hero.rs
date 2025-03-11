@@ -1,6 +1,6 @@
 use reqwest::RequestBuilder;
 
-use crate::{Transform, dota2::define_dota2_enum};
+use crate::{dota2::define_dota2_enum, Transform};
 
 impl Transform<HeroId> for RequestBuilder {
     fn transform(self, value: HeroId) -> Self {
