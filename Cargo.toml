@@ -1,6 +1,6 @@
 [package]
 name = "kez"
-version = "0.0.7"
+version = "0.0.8"
 edition = "2021"
 license = "GLWTPL"
 description = "Easy to use dota2 web api."
