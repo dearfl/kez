@@ -3,6 +3,8 @@
 [![crates.io](https://img.shields.io/crates/v/kez)](https://crates.io/crates/kez)
 [![docs.rs](https://img.shields.io/docsrs/kez)](https://docs.rs/kez)
 
+Note: This crate has been archived since 2025-03-30 responding Valve's decision to exclude high MMR matches from result of public APIs. You are free to do whatever you like with this repo.
+
 A Rust crate for interacting with Valve's Dota 2 Web API. Named after the newest hero added to Dota 2 as of this crate's creation date (2025-01-09).
 
 ## Motivation
